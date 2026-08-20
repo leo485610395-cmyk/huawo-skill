@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[你的名字] · 个人网站</title>
+
+<!--
+  ============================== 瑞士国际风 ==============================
+  【使用方法】
+  方括号 [xxx] 是占位符,让 AI 帮你逐个替换成你的真实信息,替换时连方括号一起换掉。
+  图片位置用 [ IMG: 描述 ] 标注,后期自己放图。
+
+  【风格说明】
+  瑞士国际主义(Swiss Style):全程无衬线、超大超细的标题、克莱因蓝单一强调色、
+  1px 细线分割、直角无阴影无圆角。像一份打印精美的信息手册,理性、克制、专业。
+  排版是非对称网格拼贴:名字占大半行、信息竖列贴边、图文错位下沉、
+  作品用模块网格 —— 秩序感来自看得见的网格,不是居中对称。
+
+  【不要改的部分】
+  不要改 <style> 里的任何 CSS 规则(手机端适配会崩);
+  不要给色块加圆角、阴影、渐变——直角纯色是这套风格的命;
+  不要引入第二种强调色——整页只有克莱因蓝一个颜色做重点;
+  不要把非对称网格改成居中对称(那就不是瑞士风了);
+  动效只保留现有的进场上升,不要再加新动画(瑞士风的动效要精确、克制)。
+
+  【设计依据】
+  瑞士国际主义平面设计(Massimo Vignelli / Helvetica Forever / Müller-Brockmann 网格)。
+  暖白底 #fafaf8(瑞士风不用纯白)、近黑 #0a0a0a、克莱因蓝 IKB #002FA7 唯一强调色。
+  大字用 200 超细字重——「字号越大,字重越细」是这套风格的灵魂。
+  版式参考 Müller-Brockmann 网格系统的非对称拼贴:元素吸附网格但重心偏移。
+  层次 = 三层叠加:注解层(章节十字准星、mono 大写元数据、FIG.01 图注、字体说明页脚)
+  + 材质层(hero 背景露出 12 列网格线,印刷网格的「看得见的秩序」)
+  + 微交互(联系链接的 → 箭头、大编号 hover 变蓝)。
+
+  【作者】化我(huawo.netlify.app)
+  ========================================================================
+-->
+
+<!-- 字体:可选增强,断网自动回退系统字体 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Noto+Sans+SC:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ 主题变量(瑞士风灰阶 + 单一克莱因蓝) ============ */
+  :root{
+    --paper:#fafaf8;      /* 暖白底,瑞士风不用纯白 */
+    --ink:#0a0a0a;        /* 近黑文字 */
+    --grey-1:#f0f0ee;     /* 浅灰块 */
+    --grey-2:#d4d4d2;     /* 中灰 hairline 线 */
+    --grey-3:#737373;     /* 暗灰辅助文字 */
+    --accent:#002FA7;     /* 克莱因蓝 IKB,全页唯一强调色 */
+    --accent-on:#ffffff;  /* 蓝底上的文字 */
+    --sans:"Inter","Helvetica Neue",Helvetica,Arial,"Segoe UI","PingFang SC","Hiragino Sans GB","Source Han Sans SC","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+    --mono:"JetBrains Mono","IBM Plex Mono","SF Mono",Consolas,"Courier New",ui-monospace,monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    font-size:16px;
+    line-height:1.75;
+    font-weight:300;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent);color:var(--accent-on)}
+  section{scroll-margin-top:72px}        /* 锚点跳转别被吸顶栏挡住 */
+  a{color:inherit;text-decoration:none}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+
+  /* ============ mono 元数据(瑞士风通用件:全大写 + 加宽字距) ============ */
+  .meta{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--grey-3);
+  }
+
+  /* ============ 顶栏:1px 下边线,mono 导航 ============ */
+  .topbar{
+    position:sticky;top:0;z-index:10;
+    background:var(--paper);
+    border-bottom:1px solid var(--grey-2);
+  }
+  .topbar .row{
+    display:flex;justify-content:space-between;align-items:center;
+    height:56px;
+  }
+  .topbar .brand{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500}
+  .topbar nav{display:flex;gap:28px}
+  .topbar nav a{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--grey-3);
+    transition:color .18s ease;
+  }
+  .topbar nav a:hover{color:var(--accent)}
+
+  /* ============================================================
+     Hero:非对称网格 —— 名字占左 9 列,右 3 列竖信息列贴底对齐
+     ============================================================ */
+  .hero{padding:88px 0 64px}
+  .hero-grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:24px;
+    align-items:end;
+    /* 材质层:背景露出 12 列网格线(印刷网格「看得见的秩序」) */
+    background-image:linear-gradient(90deg,rgba(10,10,10,.04) 1px,transparent 1px);
+    background-size:calc(100% / 12) 100%;
+  }
+  .hero-main{grid-column:1/10}
+  .hero-main .kicker{margin-bottom:36px}
+  .hero h1{
+    font-weight:200;
+    font-size:clamp(56px,9.5vw,124px);
+    line-height:1.02;
+    letter-spacing:-.03em;
+    margin-bottom:10px;
+  }
+  .hero h1 .mark{
+    display:inline-block;width:.14em;height:.14em;
+    background:var(--accent);
+    margin-left:.08em;
+  }
+  .hero .role{
+    font-size:clamp(19px,2.4vw,28px);
+    font-weight:300;
+    letter-spacing:-.01em;
+    margin-bottom:26px;
+  }
+  .hero .lede{max-width:52ch;color:var(--grey-3);font-size:17px}
+  /* 竖信息列:每项 hairline 打头,贴网格右缘 */
+  .hero-side{grid-column:10/13;padding-bottom:6px}
+  .hero-side .cell{border-top:1px solid var(--grey-2);padding:14px 0 18px}
+  .hero-side .cell b{
+    display:block;font-family:var(--mono);font-size:11px;
+    letter-spacing:.16em;text-transform:uppercase;
+    color:var(--grey-3);font-weight:400;margin-bottom:4px;
+  }
+  .hero-side .cell span{font-size:15px;font-weight:400}
+  /* 点阵:瑞士风装饰,只在 hero 名字下方一横条 */
+  .hero .dots{
+    margin-top:48px;height:66px;
+    background-image:radial-gradient(var(--grey-2) 1.5px,transparent 1.5px);
+    background-size:22px 22px;
+  }
+
+  /* ============ 章节头:mono 编号 + 大写标签 + ink 粗线 ============ */
+  .sec{padding:88px 0 0}
+  .sec-head{
+    display:flex;align-items:baseline;gap:20px;
+    border-top:2px solid var(--ink);
+    padding-top:14px;
+    margin-bottom:48px;
+    position:relative;
+  }
+  /* 注解层:粗线两端的十字准星(印刷对位标记) */
+  .sec-head::before,
+  .sec-head::after{
+    content:"+";
+    position:absolute;
+    top:-13px;
+    font-family:var(--mono);
+    font-size:12px;
+    line-height:1;
+    color:var(--grey-3);
+  }
+  .sec-head::before{left:-1px}
+  .sec-head::after{right:-1px}
+  .sec-head .num{
+    font-family:var(--mono);font-size:13px;
+    color:var(--accent);font-weight:500;
+  }
+  .sec-head h2{
+    font-size:13px;font-weight:500;
+    font-family:var(--mono);
+    letter-spacing:.2em;text-transform:uppercase;
+  }
+  .sec-head .fill{flex:1}
+  .sec-head .tail{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey-3)}
+
+  /* ============================================================
+     关于:图文错位 —— 左 7 列引语+正文,右 5 列头像整体下沉
+     ============================================================ */
+  .about-grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:24px;
+    align-items:start;
+  }
+  .about-main{grid-column:1/8}
+  .about-main .quote{
+    font-size:clamp(24px,3vw,34px);
+    font-weight:200;line-height:1.4;letter-spacing:-.01em;
+    margin-bottom:32px;
+  }
+  .about-main p{color:var(--grey-3);margin-bottom:16px;max-width:58ch}
+  .about-side{grid-column:8/13;margin-top:56px}   /* 下沉:和左列错开 */
+  .about-side .photo{
+    aspect-ratio:3/4;
+    background:var(--grey-1);
+    border:1px solid var(--grey-2);
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;padding:24px;
+  }
+  .about-side .caption{margin-top:10px}
+  .about-side .caption::before{content:"FIG.01 · ";color:var(--ink)}
+  .about-side .facts{margin-top:32px}
+  .about-side .facts .row{
+    display:flex;justify-content:space-between;gap:16px;
+    padding:12px 0;border-top:1px solid var(--grey-2);
+  }
+  .about-side .facts .row:last-child{border-bottom:1px solid var(--grey-2)}
+  .about-side .facts .row b{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey-3);font-weight:400;flex-shrink:0;padding-top:3px}
+  .about-side .facts .row span{font-size:14px;font-weight:400;text-align:right}
+
+  /* ============================================================
+     正在做:三列模块卡(粗顶线 + mono 编号),不是行式清单
+     ============================================================ */
+  .now-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  .now-card{
+    border-top:2px solid var(--ink);
+    padding:18px 0 0;
+  }
+  .now-card .idx{
+    font-family:var(--mono);font-size:12px;
+    color:var(--accent);font-weight:500;
+    display:block;margin-bottom:12px;
+  }
+  .now-card h3{font-size:19px;font-weight:400;letter-spacing:-.01em;margin-bottom:8px}
+  .now-card p{color:var(--grey-3);font-size:15px}
+  .now-card .yr{display:block;margin-top:14px}
+
+  /* ============================================================
+     作品:2×2 模块网格(粗顶线 + 大编号),删任意卡不留洞
+     ============================================================ */
+  .works-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px 32px;
+  }
+  .work-card{
+    border-top:2px solid var(--ink);
+    padding:18px 0 28px;
+    transition:background .18s ease;
+  }
+  .work-card:hover{background:var(--grey-1)}
+  .work-card .top{
+    display:flex;justify-content:space-between;align-items:baseline;
+    margin-bottom:18px;
+  }
+  .work-card .idx{
+    font-size:clamp(52px,5.5vw,68px);font-weight:200;line-height:1;
+    letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;
+    transition:color .18s ease;
+  }
+  .work-card:hover .idx{color:var(--accent)}
+  .work-card .tag{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--grey-3);
+    border:1px solid var(--grey-2);
+    display:inline-block;padding:5px 10px;
+  }
+  .work-card h3{
+    font-size:22px;font-weight:400;letter-spacing:-.01em;
+    margin-bottom:8px;transition:color .18s ease;
+  }
+  .work-card:hover h3{color:var(--accent)}
+  .work-card p{color:var(--grey-3);font-size:15px;margin-bottom:12px}
+  .work-card .yr{display:block}
+
+  /* ============ 联系:克莱因蓝大色块(全页唯一的深色呼吸) ============ */
+  .contact-block{
+    background:var(--accent);
+    color:var(--accent-on);
+    padding:88px 0;
+    margin-top:96px;
+    position:relative;
+  }
+  .contact-block .wrap{position:relative}
+  /* 注解层:右缘竖排一句话(瑞士排版传统的 vertical caption) */
+  .contact-block .vnote{
+    position:absolute;
+    right:0;top:0;
+    writing-mode:vertical-rl;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.55);
+  }
+  .contact-block .meta{color:rgba(255,255,255,.6)}
+  .contact-block .mail{
+    font-size:clamp(30px,5vw,64px);
+    font-weight:200;letter-spacing:-.02em;
+    margin:20px 0 36px;
+    display:inline-block;
+    border-bottom:1px solid rgba(255,255,255,.35);
+    padding-bottom:10px;
+    transition:border-color .18s ease;
+  }
+  .contact-block .mail:hover{border-color:#fff}
+  .contact-block .links{display:flex;flex-wrap:wrap;gap:12px 32px}
+  .contact-block .links a{
+    font-family:var(--mono);font-size:13px;letter-spacing:.14em;
+    text-transform:uppercase;color:rgba(255,255,255,.75);
+    transition:color .18s ease;
+  }
+  /* 微交互:箭头在 hover 时点亮 */
+  .contact-block .links a::before{
+    content:"→ ";
+    color:rgba(255,255,255,.4);
+    transition:color .18s ease;
+  }
+  .contact-block .links a:hover{color:#fff}
+  .contact-block .links a:hover::before{color:#fff}
+
+  /* ============ 页脚:ink 黑底收尾 + colophon 字体说明 ============ */
+  footer{
+    background:var(--ink);color:rgba(255,255,255,.55);
+    padding:28px 0 24px;
+  }
+  footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  footer .meta{color:rgba(255,255,255,.45)}
+  footer .sub{
+    margin-top:10px;
+    border-top:1px solid rgba(255,255,255,.14);
+    padding-top:10px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  }
+  footer .sub span{
+    font-family:var(--mono);font-size:10px;
+    letter-spacing:.16em;text-transform:uppercase;
+    color:rgba(255,255,255,.35);
+  }
+
+  /* ============ 动效:瑞士式的精确进场(零 JS) ============
+     hero 元素从网格位置依次小幅上升(距离小=精确感);
+     正文板块滚动进入视口时淡入。减少动态效果时自动关闭;
+     不支持滚动动画的老浏览器直接显示,不会白屏 */
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+  }
+  .hero .kicker { animation: rise .5s ease-out both; }
+  .hero h1      { animation: rise .6s ease-out .08s both; }
+  .hero .role   { animation: rise .6s ease-out .16s both; }
+  .hero .lede   { animation: rise .6s ease-out .24s both; }
+  .hero-side    { animation: rise .6s ease-out .30s both; }
+  .hero .dots   { animation: rise .6s ease-out .38s both; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .sec .sec-head, .about-grid, .now-grid, .works-grid,
+      .contact-block .wrap {
+        animation: rise .5s ease-out both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
+    }
+  }
+
+  /* ============ 手机端适配 ============ */
+  @media (max-width:1024px){
+    .hero-grid{grid-template-columns:1fr}
+    .hero-main,.hero-side{grid-column:auto}
+    .hero-side{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .hero-side .cell{padding-top:10px}
+    .about-main{grid-column:auto}
+    .about-side{grid-column:auto;margin-top:40px;max-width:420px}
+  }
+  @media (max-width:768px){
+    .wrap{padding:0 20px}
+    .topbar nav{gap:16px}
+    .topbar nav a{font-size:11px;letter-spacing:.1em}
+    .hero{padding:56px 0 44px}
+    .hero-side{grid-template-columns:1fr;gap:0}
+    .hero .dots{height:44px;margin-top:36px}
+    .sec{padding:64px 0 0}
+    .sec-head{flex-wrap:wrap;gap:10px 16px;margin-bottom:36px}
+    .now-grid{grid-template-columns:1fr;gap:28px}
+    .works-grid{grid-template-columns:1fr;gap:36px}
+    .work-card{padding-bottom:22px}
+    .work-card .idx{font-size:44px}
+    .contact-block{padding:64px 0;margin-top:72px}
+    .contact-block .vnote{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 顶栏 ============ -->
+<header class="topbar" id="top">
+  <div class="wrap row">
+    <div class="brand">[你的名字] — PORTFOLIO</div>
+    <nav>
+      <a href="#about">关于</a>
+      <a href="#now">正在做</a>
+      <a href="#work">作品</a>
+      <a href="#contact">联系</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ Hero:非对称网格 ============ -->
+<div class="wrap hero">
+  <div class="hero-grid">
+    <div class="hero-main">
+      <div class="kicker meta">[一句话定位]</div>
+      <h1>[你的名字]<span class="mark" aria-hidden="true"></span></h1>
+      <div class="role">[你的身份,比如:独立开发者 / 产品设计师]</div>
+      <p class="lede">[用一两句话说你是谁、在做什么、相信什么。不用写得正式,像跟人介绍自己一样自然就好。]</p>
+    </div>
+    <aside class="hero-side">
+      <div class="cell"><b>坐标</b><span>[你现在的城市]</span></div>
+      <div class="cell"><b>身份</b><span>[你的职业或身份]</span></div>
+      <div class="cell"><b>状态</b><span>[当前状态,比如:正在做 XX / 开放合作]</span></div>
+    </aside>
+  </div>
+  <div class="dots" aria-hidden="true"></div>
+</div>
+
+<!-- ============ 01 关于:图文错位 ============ -->
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">01</span>
+      <h2>关于</h2>
+      <span class="fill"></span>
+      <span class="tail">PROFILE</span>
+    </div>
+    <div class="about-grid">
+      <div class="about-main">
+        <p class="quote">[写一句你的工作理念或信念——你怎么看「做事」这件事,用你自己的口气。]</p>
+        <p>[关于我第一段:从什么时候开始做什么、之前经历过什么。两到四句话。]</p>
+        <p>[关于我第二段:为什么走到现在这条路、你现在怎么看这件事。两到四句话。]</p>
+      </div>
+      <aside class="about-side">
+        <div class="photo">[ IMG: 你的头像 - 3:4 竖版 ]</div>
+        <div class="caption meta">[ IMG 图注:一句话,比如 摄于 工作室 ]</div>
+        <div class="facts">
+          <div class="row"><b>坐标</b><span>[你的城市]</span></div>
+          <div class="row"><b>方向</b><span>[你专注的领域]</span></div>
+          <div class="row"><b>经验</b><span>[年限或阶段,比如 3 年 / 在读大二]</span></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 正在做:三列模块卡 ============ -->
+<section class="sec" id="now">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">02</span>
+      <h2>正在做</h2>
+      <span class="fill"></span>
+      <span class="tail">NOW</span>
+    </div>
+    <div class="now-grid">
+      <div class="now-card">
+        <span class="idx">01</span>
+        <h3>[正在做的事 1 名称]</h3>
+        <p>[一句话说明这件事是什么、进展到哪了]</p>
+        <span class="yr meta">[年份]</span>
+      </div>
+      <div class="now-card">
+        <span class="idx">02</span>
+        <h3>[正在做的事 2 名称]</h3>
+        <p>[一句话说明]</p>
+        <span class="yr meta">[年份]</span>
+      </div>
+      <div class="now-card">
+        <span class="idx">03</span>
+        <h3>[正在做的事 3 名称]</h3>
+        <p>[一句话说明]</p>
+        <span class="yr meta">[年份]</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 精选作品:2×2 模块网格 ============ -->
+<section class="sec" id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num">03</span>
+      <h2>精选作品</h2>
+      <span class="fill"></span>
+      <span class="tail">SELECTED WORKS</span>
+    </div>
+    <div class="works-grid">
+
+      <article class="work-card">
+        <div class="top">
+          <span class="idx">01</span>
+          <span class="tag">[分类标签]</span>
+        </div>
+        <h3>[作品 1 名称]</h3>
+        <p>[一句话介绍:解决什么问题、现在什么状态]</p>
+        <span class="yr meta">[年份]</span>
+      </article>
+
+      <article class="work-card">
+        <div class="top">
+          <span class="idx">02</span>
+          <span class="tag">[分类标签]</span>
+        </div>
+        <h3>[作品 2 名称]</h3>
+        <p>[一句话介绍]</p>
+        <span class="yr meta">[年份]</span>
+      </article>
+
+      <article class="work-card">
+        <div class="top">
+          <span class="idx">03</span>
+          <span class="tag">[分类标签]</span>
+        </div>
+        <h3>[作品 3 名称]</h3>
+        <p>[一句话介绍]</p>
+        <span class="yr meta">[年份]</span>
+      </article>
+
+      <article class="work-card">
+        <div class="top">
+          <span class="idx">04</span>
+          <span class="tag">[分类标签]</span>
+        </div>
+        <h3>[作品 4 名称]</h3>
+        <p>[一句话介绍]</p>
+        <span class="yr meta">[年份]</span>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 联系:克莱因蓝大色块 ============ -->
+<section class="contact-block" id="contact">
+  <div class="wrap">
+    <span class="vnote" aria-hidden="true">Open for collaboration · 欢迎合作</span>
+    <span class="meta">04 — CONTACT — 联系</span><br>
+    <a class="mail" href="mailto:[你的邮箱]">[你的邮箱]</a>
+    <div class="links">
+      <a href="#">[社交平台 1]</a>
+      <a href="#">[社交平台 2]</a>
+      <a href="#">[社交平台 3]</a>
+      <a href="#">[社交平台 4]</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页脚 ============ -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span class="meta">© [年份] [你的名字]</span>
+      <span class="meta">SWISS STYLE · 瑞士国际风</span>
+    </div>
+    <div class="sub">
+      <span>Set in Inter &amp; JetBrains Mono</span>
+      <span>Grid 12 · IKB #002FA7</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

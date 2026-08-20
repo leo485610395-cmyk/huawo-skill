@@ -1,0 +1,623 @@
+<!--
+============================================================
+暗色高级风 · 个人介绍站模板
+============================================================
+
+【使用方法】
+1. 用记事本/VS Code/任何文本编辑器打开这个文件
+2. 按 Ctrl+H(或 Cmd+H)打开查找替换
+3. 把下面这些占位符替换成你自己的内容:
+
+   [你的名字]              → 你的名字或 ID
+   [一句话介绍你自己]      → 比如「一个在大学做 OPC 的人」
+   [你的作品名]            → 你的项目/作品名字
+   [你的邮箱]              → 你的联系邮箱
+   [你的社交账号]          → 你的 Twitter/GitHub/小红书 等
+   [你的城市]              → 你所在的城市
+
+4. 替换完保存,双击文件用浏览器打开看效果
+5. 把图片占位 [IMG: xxx] 换成你自己的图片(放到同目录,改 src 路径)
+
+【风格说明】
+暗色高级风 = 近黑深底 + 米白文字 + 一点金 的「画廊/工作室」感
+安静、贵、不吵
+排版是居中轴对称的画廊式:所有内容沿中轴线排,
+作品是全宽单幅大画,像走在一条安静的展廊里
+适合:独立开发者、设计师、摄影师、咨询师、做高端服务的人
+不适合:想要热闹活泼感的账号
+
+【不要改的部分】
+- 不要改 <style> 标签里的 CSS(会破坏视觉效果)
+- 不要改板块数量和顺序(会破坏布局)
+- 金色全站只有三处(导航 hover、名字句点、板块编号),不要加第四处
+- 不要给卡片加投影(这个风格靠留白和细线,不靠阴影)
+- 不要把居中改成左对齐(轴对称是这套排版的骨架)
+- 不要删 body 的噪点层(CSS 里的 body::before,是相纸质感,删了会变「屏幕感」)
+- 动效只保留现有的进场淡入,不要再加新动画(这个风格的动效要慢、少、安静)
+
+【设计依据】
+- GitHub 纯 HTML 模板里星数最高的一类就是 dark + 金色点缀
+  (参考 hexo/astro 高星主题的共性)
+- 2025-2026 深色 + 衬线 + 单一贵金属色是「个人作品集」最稳的高级感公式
+- 排版参考画廊/奢侈品牌官网的居中轴语言:上下留白大、
+  单列全宽作品、文字全部回中 —— 和「两栏图文」的常规简历站拉开差距
+- 层次 = 三层叠加:注解层(No.01 作品编号、FIG.01 展签、页脚 meta 行)
+  + 材质层(全站极淡噪点,消解纯黑的屏幕感)
+  + 微交互(作品标题/CTA 的下划线从中间扫入,图片 hover 慢速放大 5%)
+- 签名元素:超大衬线名字 + 金色句点、板块编号 01-04、居中轴线
+- 零 JS,零依赖,双击就能打开
+
+【作者】化我(huawo.netlify.app)
+============================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[你的名字] — [一句话介绍你自己]</title>
+
+<!-- 字体:在线时加载 Google Fonts,断网自动回退系统字体,不影响使用 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #121214;             /* 近黑底 */
+    --card: #1a1d24;           /* 卡片底(深蓝灰) */
+    --text: #ece7dd;           /* 米白文字 */
+    --soft: #8f8b83;           /* 次级文字(暖灰) */
+    --line: rgba(236, 231, 221, 0.10);  /* 细分隔线 */
+    --gold: #c8a961;           /* 金:全站只有三处 */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC",
+                 "SimSun", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.9;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 材质层:全站极淡噪点(印刷相纸质感,消解纯黑的「屏幕感」) */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  }
+
+  /* 小标签:无衬线 + 字距,用来做导航、meta 一类的「小字」 */
+  .label {
+    font-family: -apple-system, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--soft);
+  }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 28px; }
+  section { scroll-margin-top: 96px; }        /* 锚点跳转别被吸顶导航挡住 */
+  /* 居中轴:所有板块的文字内容默认回中 */
+  .axis { text-align: center; }
+
+  a { color: inherit; }
+
+  /* ============================================================
+     吸顶导航:居中排列(轴对称的起点)
+     ============================================================ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(18, 18, 20, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav .inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 16px 28px;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 34px;
+  }
+  .nav .logo {
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+  }
+  .nav .links { display: flex; gap: 26px; }
+  .nav .links a {
+    font-family: -apple-system, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--soft);
+    text-decoration: none;
+    transition: color 0.2s;              /* 金处 ①:导航 hover */
+  }
+  .nav .links a:hover { color: var(--gold); }
+
+  /* ============================================================
+     Hero:居中,超大衬线名字 + 金色句点
+     ============================================================ */
+  .hero { padding: 128px 0 104px; }
+  .hero .hello {
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  /* 轴对称:开场小字两侧短细线,像展签的引导线 */
+  .hero .hello::before,
+  .hero .hello::after {
+    content: "";
+    width: 36px;
+    height: 1px;
+    background: var(--line);
+  }
+  .hero h1 {
+    font-family: "Fraunces", "Noto Serif SC", Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(52px, 9vw, 116px);
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+    margin-bottom: 30px;
+  }
+  .hero h1 .dot {                       /* 金处 ②:名字句点 */
+    color: var(--gold);
+    font-weight: 400;
+  }
+  .hero .tagline {
+    font-size: 19px;
+    color: var(--soft);
+    max-width: 480px;
+    margin: 0 auto 44px;
+  }
+  .hero .cta {
+    font-family: -apple-system, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+  }
+  /* 微交互:下划线从中间向两侧扫入(不是变色,是动线) */
+  .hero .cta::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--text);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hero .cta:hover::after { transform: scaleX(1); }
+
+  /* ============================================================
+     通用板块:居中的金色编号 + 标题 + 两侧短细线
+     ============================================================ */
+  section.block { padding: 72px 0; }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 56px;
+  }
+  .sec-head::before,
+  .sec-head::after {                     /* 轴对称:标题两侧短细线 */
+    content: "";
+    width: 44px;
+    height: 1px;
+    background: var(--line);
+    align-self: center;
+  }
+  .sec-head .num {                      /* 金处 ③:板块编号 01-04 */
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--gold);
+  }
+  .sec-head h2 {
+    font-family: "Fraunces", "Noto Serif SC", Georgia, serif;
+    font-weight: 400;
+    font-size: 28px;
+    letter-spacing: 0.06em;
+  }
+
+  /* 关于:上图下文,窄头像居中(画廊说明牌式) */
+  .about-fig { margin-bottom: 40px; }
+  .about-fig .portrait {
+    width: min(280px, 72%);
+    margin: 0 auto;
+    aspect-ratio: 4 / 5;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.9;
+    padding: 18px;
+    position: relative;
+  }
+  /* 画框感:外框内再垫一圈细线,像装裱 */
+  .about-fig .portrait::after {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    pointer-events: none;
+  }
+  /* 展签:画像下的小图注(FIG.01) */
+  .about-fig .plate {
+    margin-top: 16px;
+    letter-spacing: 0.14em;
+  }
+  .about-text { max-width: 560px; margin: 0 auto; }
+  .about-text p { margin-bottom: 18px; }
+  .about-text p:last-child { margin-bottom: 0; color: var(--soft); }
+
+  /* 正在做:居中一行一件,中点分隔 */
+  .now-list {
+    max-width: 620px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 0;
+  }
+  .now-item { padding: 16px 0; }
+  .now-item + .now-item { border-top: 1px solid var(--line); }
+  .now-item b { font-weight: 600; }
+  .now-item .label { margin-right: 10px; }
+
+  /* 作品:全宽单幅大画(画廊展墙式,一列慢节奏) */
+  .piece { display: block; text-decoration: none; margin-bottom: 88px; }
+  .piece:last-child { margin-bottom: 0; }
+  /* 注解层:作品编号 No.01-04(米白斜体,不用金——金只留给三处签名) */
+  .piece .no {
+    display: block;
+    font-family: "Fraunces", Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    color: var(--soft);
+    margin-bottom: 10px;
+  }
+  .piece-thumb {
+    aspect-ratio: 16 / 9;
+    background: #22262e;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.9;
+    padding: 14px;
+    margin-bottom: 26px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .piece:hover .piece-thumb { border-color: rgba(236, 231, 221, 0.28); }
+  /* 放了真实图片后:hover 慢速放大 5%(占位状态下无效果,属正常) */
+  .piece-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .piece:hover .piece-thumb img { transform: scale(1.05); }
+  .piece-title {
+    font-family: "Fraunces", "Noto Serif SC", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(22px, 3.4vw, 30px);
+    margin-bottom: 8px;
+    display: inline-block;
+    position: relative;
+  }
+  /* 微交互:标题下划线从中间扫入(金色已满三处,这里用米白动线) */
+  .piece-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 1px;
+    background: var(--text);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .piece:hover .piece-title::after { transform: scaleX(1); }
+  .piece-meta {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin-bottom: 12px;
+  }
+  .piece-desc {
+    max-width: 480px;
+    margin: 0 auto;
+    font-size: 15px;
+    color: var(--soft);
+    line-height: 1.8;
+  }
+
+  /* 联系:居中,大邮箱 */
+  .contact { text-align: center; padding: 88px 0 96px; }
+  .contact .lead {
+    font-size: 19px;
+    max-width: 460px;
+    margin: 0 auto 36px;
+    color: var(--soft);
+  }
+  .contact .mail {
+    font-family: "Fraunces", "Noto Serif SC", Georgia, serif;
+    font-size: clamp(22px, 3.6vw, 34px);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 6px;
+  }
+  .contact .mail::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--text);
+    transform: scaleX(0.18);
+    transform-origin: center;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .contact .mail:hover::after { transform: scaleX(1); }
+  .contact .socials {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    flex-wrap: wrap;
+  }
+  .contact .socials a {
+    font-family: -apple-system, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--soft);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact .socials a:hover { color: var(--text); }
+
+  /* 页脚:左中右三段 meta 层(博物馆图录式收尾) */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 30px 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  /* ============================================================
+     动效:画廊式的慢节奏进场(零 JS)
+     - hero 加载时依次进场,像展廊开灯
+     - 正文滚动到哪,哪一块慢慢亮起来(scroll-driven)
+     - 系统开了「减少动态效果」时自动关闭;
+       不支持滚动动画的老浏览器直接显示,不会白屏
+     ============================================================ */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(24px); }
+  }
+  .hero .hello   { animation: fade-up 0.7s ease-out both; }
+  .hero h1       { animation: fade-up 0.7s ease-out 0.12s both; }
+  .hero .tagline { animation: fade-up 0.7s ease-out 0.24s both; }
+  .hero .cta     { animation: fade-up 0.7s ease-out 0.36s both; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .sec-head, .about-fig, .about-text, .now-list,
+      .piece, .contact, footer {
+        animation: fade-up 0.5s ease-out both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
+    }
+  }
+
+  /* ============================================================
+     手机端适配
+     ============================================================ */
+  @media (max-width: 768px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 20px; }
+    .nav .inner { padding: 12px 20px; gap: 20px; }
+    .nav .links { gap: 16px; }
+    .hero { padding: 72px 0 60px; }
+    .hero h1 { font-size: clamp(40px, 12vw, 64px); }
+    section.block { padding: 48px 0; }
+    .sec-head h2 { font-size: 24px; }
+    .piece { margin-bottom: 64px; }
+    .contact { padding: 64px 0 72px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="inner">
+    <a href="#top" class="logo">[你的名字]</a>
+    <div class="links">
+      <a href="#about">关于</a>
+      <a href="#now">正在做</a>
+      <a href="#work">作品</a>
+      <a href="#contact">联系</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero axis" id="top">
+    <div class="hello label">[你的城市] · [你的身份或标签]</div>
+    <h1>[你的名字]<span class="dot">.</span></h1>
+    <p class="tagline">
+      [一句话介绍你自己 —— 你做什么、关心什么。
+      一句话,安静一点,像画廊墙上的说明牌。]
+    </p>
+    <a href="#contact" class="cta">找到我 ↓</a>
+  </header>
+
+  <section id="about" class="block axis">
+    <div class="sec-head">
+      <span class="num">01</span>
+      <h2>关于</h2>
+    </div>
+    <div class="about-fig">
+      <div class="portrait">
+        [ IMG: 你的照片 ]<br>
+        [ 低饱和 ]<br>
+        [ 4:5 竖版 ]
+      </div>
+      <div class="plate label">FIG.01 — [你的名字]</div>
+    </div>
+    <div class="about-text">
+      <p>
+        [简单介绍一下你的背景:从什么时候开始做什么、
+        之前经历过什么、为什么走到现在这条路。两三句就够,
+        这个风格吃克制,不吃长篇。]
+      </p>
+      <p>
+        [写一句你的工作理念或信念 —— 你怎么看「做事」这件事,
+        用你自己的口气,一两句话就够。]
+      </p>
+    </div>
+  </section>
+
+  <section id="now" class="block axis">
+    <div class="sec-head">
+      <span class="num">02</span>
+      <h2>正在做</h2>
+    </div>
+    <div class="now-list">
+      <div class="now-item">
+        <span class="label">[年份 — 至今]</span>
+        <b>[你的作品名]</b> —— [一句话进展]
+      </div>
+      <div class="now-item">
+        <span class="label">[年份 — 至今]</span>
+        <b>[你的作品名]</b> —— [一句话进展]
+      </div>
+      <div class="now-item">
+        <span class="label">[年份 — 至今]</span>
+        <b>[你的作品名]</b> —— [一句话进展]
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="block axis">
+    <div class="sec-head">
+      <span class="num">03</span>
+      <h2>作品</h2>
+    </div>
+
+    <a href="#" class="piece">
+      <div class="piece-thumb">
+        [ IMG: 作品截图 ] [ 16:9 横版 ]
+      </div>
+      <span class="no">No.01</span>
+      <h3 class="piece-title">[你的作品名]</h3>
+      <div class="piece-meta">
+        <span class="label">[材料/形式]</span>
+        <span class="label">[年份]</span>
+      </div>
+      <p class="piece-desc">[一句话描述:做了什么、解决什么问题、现在什么状态。]</p>
+    </a>
+
+    <a href="#" class="piece">
+      <div class="piece-thumb">
+        [ IMG: 作品截图 ] [ 16:9 横版 ]
+      </div>
+      <span class="no">No.02</span>
+      <h3 class="piece-title">[你的作品名]</h3>
+      <div class="piece-meta">
+        <span class="label">[材料/形式]</span>
+        <span class="label">[年份]</span>
+      </div>
+      <p class="piece-desc">[一句话描述:做了什么、解决什么问题、现在什么状态。]</p>
+    </a>
+
+    <a href="#" class="piece">
+      <div class="piece-thumb">
+        [ IMG: 作品截图 ] [ 16:9 横版 ]
+      </div>
+      <span class="no">No.03</span>
+      <h3 class="piece-title">[你的作品名]</h3>
+      <div class="piece-meta">
+        <span class="label">[材料/形式]</span>
+        <span class="label">[年份]</span>
+      </div>
+      <p class="piece-desc">[一句话描述:做了什么、解决什么问题、现在什么状态。]</p>
+    </a>
+
+    <a href="#" class="piece">
+      <div class="piece-thumb">
+        [ IMG: 作品截图 ] [ 16:9 横版 ]
+      </div>
+      <span class="no">No.04</span>
+      <h3 class="piece-title">[你的作品名]</h3>
+      <div class="piece-meta">
+        <span class="label">[材料/形式]</span>
+        <span class="label">[年份]</span>
+      </div>
+      <p class="piece-desc">[一句话描述:做了什么、解决什么问题、现在什么状态。]</p>
+    </a>
+
+  </section>
+
+  <section id="contact" class="contact">
+    <p class="lead">
+      [一句邀约:什么事可以来找你。合作、请教、闲聊都行,一句话就够。]
+    </p>
+    <a href="mailto:[你的邮箱]" class="mail">[你的邮箱]</a>
+    <div class="socials">
+      <a href="#">[你的社交账号]</a>
+      <a href="#">[你的社交账号]</a>
+      <a href="#">[你的社交账号]</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="label">© 2026 [你的名字]</div>
+    <div class="label">[你的城市] · [你的身份或标签]</div>
+    <div class="label">最后更新 — [年.月]</div>
+  </footer>
+
+</div>
+
+</body>
+</html>

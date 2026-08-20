@@ -1,0 +1,638 @@
+<!--
+============================================================
+杂志编辑风 · 个人介绍站模板
+============================================================
+
+【使用方法】
+1. 用记事本/VS Code/任何文本编辑器打开这个文件
+2. 按 Ctrl+H(或 Cmd+H)打开查找替换
+3. 把下面这些占位符替换成你自己的内容:
+
+   [你的名字]              → 你的名字或 ID
+   [一句话介绍你自己]      → 比如「一个在大学做 OPC 的人」
+   [你的作品名]            → 你的项目/作品名字
+   [你的邮箱]              → 你的联系邮箱
+   [你的社交账号]          → 你的 Twitter/GitHub/小红书 等
+   [你的城市]              → 你所在的城市
+   [年月]                  → 刊号日期,比如「2026.08」
+
+4. 替换完保存,双击文件用浏览器打开看效果
+5. 把图片占位 [IMG: xxx] 换成你自己的图片(放到同目录,改 src 路径)
+
+【风格说明】
+杂志编辑风 = 把你当成一份对开报纸来做:报头、期号、
+主文+侧栏、跨栏拉引语、头条/次条分层
+排版是报纸密排式:关于区是「文章版面」(两栏正文竖着读,
+右侧一窄栏放照片和小字信息),正文中间插一条跨栏大引语;
+作品区是「头版层级」(第一条是头条,后三条两列简讯)
+适合:写作者、内容创作者、记者、长期更新博客的人
+不适合:想放大量图片的人(这个风格字是主角)
+
+【不要改的部分】
+- 不要改 <style> 标签里的 CSS(会破坏视觉效果)
+- 不要改板块数量和顺序(会破坏布局)
+- 砖红色全站只做点缀(首字、序号、hover),不要大面积用
+- 不要加圆角和阴影(杂志是纸,纸没有圆角)
+- 拉引语全文只插一条(两条就吵了)
+- 动效只保留现有的油墨式淡入,不要再加新动画(报纸是纸,纸只该被印上,不该飞来飞去)
+
+【设计依据】
+- 衬线体回潮是 2025-2026 最强的网页排版趋势
+  (The Verge 等媒体改版都在回归编辑排版)
+- 排版参考对开报纸(front page)的版面语言:
+  主文/侧栏(op-ed column)、跨栏引语(pull quote)、
+  头条/简讯(lead story / briefs)—— 和「居中画廊」「网格拼贴」
+  拉开排版差距
+- 层次 = 三层叠加:注解层(期号行三段、byline 署名行、FIG.01 图注、
+  P.01 页码、文末尾花 ■)+ 材质层(栏间竖线 column-rule,报纸标配)
+  + 排版纪律(首行缩进代段距,报纸正文的读法)
+- 签名元素:VOL.01 期号行、双细线(border-top:3px double)、
+  首字下沉、正文双栏、跨栏拉引语、作品斜体大序号、头条层级
+- 无圆角、无阴影、全部左对齐 —— 纸感来自规矩
+- 参考 github.com/topics/editorial · 报刊排版传统
+
+【作者】化我(huawo.netlify.app)
+============================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[你的名字] — [一句话介绍你自己]</title>
+
+<!-- 字体:在线时加载 Google Fonts,断网自动回退系统字体,不影响使用 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=Montserrat:wght@400;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --paper: #faf7f0;         /* 纸色底 */
+    --ink: #1a1a1a;           /* 墨色文字 */
+    --soft: #6f6a61;          /* 次级文字 */
+    --rule: #d8d2c4;          /* 细线 */
+    --accent: #8b2e2e;        /* 砖红:全站唯一彩色,只做点缀 */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC",
+                 "SimSun", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.9;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 小标签:无衬线大写,杂志的「眉线」小字 */
+  .meta {
+    font-family: "Montserrat", -apple-system, "Segoe UI", "PingFang SC",
+                 "Microsoft YaHei", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--soft);
+  }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 28px; }
+  section { scroll-margin-top: 24px; }
+
+  a { color: inherit; }
+
+  /* ============================================================
+     报头:刊名 + 期号行(双细线是本风格的签名)
+     ============================================================ */
+  .masthead { padding-top: 52px; }
+  .masthead .issue {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-top: 3px double var(--ink);      /* 签名:双细线 */
+    border-bottom: 1px solid var(--rule);
+    padding: 10px 2px;
+    margin-bottom: 34px;
+  }
+  .masthead h1 {
+    font-family: "Playfair Display", "Noto Serif SC", Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(44px, 8vw, 84px);
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    margin-bottom: 8px;
+  }
+  .masthead .sub {
+    font-size: 18px;
+    color: var(--soft);
+    font-style: italic;
+    font-family: "Playfair Display", "Noto Serif SC", Georgia, serif;
+    margin-bottom: 30px;
+  }
+  .masthead nav {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 12px 2px;
+    margin-bottom: 56px;
+  }
+  .masthead nav a {
+    font-family: "Montserrat", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink);
+    transition: color 0.2s;
+  }
+  .masthead nav a:hover { color: var(--accent); }
+
+  /* ============================================================
+     开篇导语(kicker + 大标题 + dek)
+     ============================================================ */
+  .lede { margin-bottom: 64px; }
+  .lede .kicker {
+    display: block;
+    margin-bottom: 16px;
+    color: var(--accent);
+  }
+  .lede .kicker::before { content: "—— "; }   /* 眉标前置短横线 */
+  .lede h2 {
+    font-family: "Playfair Display", "Noto Serif SC", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(28px, 4.6vw, 46px);
+    line-height: 1.3;
+    margin-bottom: 18px;
+  }
+  .lede .dek { color: var(--soft); max-width: 620px; }
+  /* 注解层:byline 署名行(「文 / 谁」+ 更新时间,报纸署名传统) */
+  .lede .byline {
+    margin-top: 22px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+
+  /* ============================================================
+     通用板块:眉线小标 + 细线
+     ============================================================ */
+  section.block { margin-bottom: 80px; }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+    margin-bottom: 34px;
+  }
+
+  /* ============================================================
+     关于:文章版面 = 主文(两栏正文+首字下沉+跨栏拉引语) + 侧栏
+     ============================================================ */
+  .spread {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 48px;
+    align-items: start;
+  }
+  /* 主文:两栏竖着读,栏间一条细竖线(报纸标配的 column rule) */
+  .story {
+    column-count: 2;
+    column-gap: 44px;
+    column-rule: 1px solid var(--rule);
+  }
+  .story p { margin-bottom: 16px; break-inside: avoid; }
+  /* 排版纪律:非首段用首行缩进(报纸正文的读法) */
+  .story p + p { text-indent: 2em; }
+  /* 签名:首字下沉,砖红 */
+  .story > p:first-child::first-letter {
+    font-family: "Playfair Display", "Noto Serif SC", Georgia, serif;
+    font-size: 64px;
+    line-height: 0.85;
+    float: left;
+    padding: 8px 10px 0 0;
+    color: var(--accent);
+  }
+  /* 签名:跨栏拉引语(全文只此一条) */
+  .pull-quote {
+    column-span: all;
+    break-inside: avoid;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 26px 8px;
+    margin: 26px 0;
+    text-align: center;
+    font-family: "Playfair Display", "Noto Serif SC", Georgia, serif;
+    font-style: italic;
+    font-size: clamp(21px, 2.8vw, 27px);
+    line-height: 1.6;
+  }
+  .pull-quote::before {
+    content: "「";
+    color: var(--accent);
+    font-size: 1.2em;
+  }
+  .pull-quote::after {
+    content: "」";
+    color: var(--accent);
+    font-size: 1.2em;
+  }
+  /* 注解层:文末尾花(■),报纸「正文到此为止」的记号 */
+  .story > p:last-of-type::after {
+    content: "■";
+    font-size: 0.5em;
+    margin-left: 0.6em;
+    vertical-align: 0.25em;
+    color: var(--ink);
+  }
+  /* 侧栏:照片 + 小字信息,报纸 op-ed 旁注式 */
+  .rail .figure { border: 1px solid var(--rule); padding: 10px; background: #ffffff; }
+  .rail .figure .img {
+    aspect-ratio: 3 / 4;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.8;
+    padding: 14px;
+  }
+  .rail .figure figcaption { padding-top: 10px; text-align: center; }
+  .rail .figure figcaption::before { content: "FIG.01 · "; color: var(--ink); }
+  .rail .facts { margin-top: 28px; }
+  .rail .facts .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 2px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .rail .facts .row:first-child { border-top: 1px solid var(--rule); }
+  .rail .facts .row span { font-size: 14px; text-align: right; }
+
+  /* ============================================================
+     近况:两列简讯格(报纸 briefs 栏)
+     ============================================================ */
+  .briefs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 44px;
+  }
+  .brief {
+    border-top: 1px solid var(--ink);
+    padding: 12px 0 22px;
+  }
+  .brief .meta { display: block; margin-bottom: 6px; }
+  .brief b { font-weight: 600; }
+
+  /* ============================================================
+     作品:头版层级 —— 一条头条 + 三条两列简讯
+     ============================================================ */
+  .feature {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 32px;
+    padding: 8px 0 36px;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 32px;
+    align-items: start;
+  }
+  .feature .idx {
+    font-family: "Playfair Display", Georgia, serif;
+    font-style: italic;
+    font-size: clamp(64px, 8vw, 96px);
+    line-height: 0.9;
+    color: var(--accent);          /* 砖红只点缀在序号 */
+  }
+  .feature .w-meta {
+    display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 10px;
+  }
+  .feature h3 {
+    font-family: "Playfair Display", "Noto Serif SC", Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+  .feature h3 a { text-decoration: none; }
+  .feature h3 a:hover { color: var(--accent); }
+  .feature .f-body {
+    column-count: 2;
+    column-gap: 36px;
+    column-rule: 1px solid var(--rule);   /* 头条正文也配栏线 */
+  }
+  .feature .f-body p { color: var(--soft); font-size: 16px; break-inside: avoid; }
+
+  .minor-works {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 44px;
+  }
+  .minor {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 16px;
+    border-top: 1px solid var(--rule);
+    padding-top: 14px;
+  }
+  .minor .idx {
+    font-family: "Playfair Display", Georgia, serif;
+    font-style: italic;
+    font-size: 34px;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .minor .w-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+  .minor h4 {
+    font-family: "Playfair Display", "Noto Serif SC", Georgia, serif;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+  .minor h4 a { text-decoration: none; }
+  .minor h4 a:hover { color: var(--accent); }
+  .minor p { color: var(--soft); font-size: 15px; }
+
+  /* ============================================================
+     联系:大衬线邮箱,左对齐
+     ============================================================ */
+  .contact { margin-bottom: 80px; }
+  .contact .mail {
+    font-family: "Playfair Display", "Noto Serif SC", Georgia, serif;
+    font-size: clamp(22px, 3.4vw, 32px);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink);
+    display: inline-block;
+    margin-bottom: 20px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .contact .mail:hover { color: var(--accent); border-color: var(--accent); }
+  .contact .socials {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    font-family: "Montserrat", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .contact .socials a { text-decoration: none; color: var(--soft); }
+  .contact .socials a:hover { color: var(--ink); }
+  .contact .socials .sep { color: var(--rule); }
+
+  /* 版权页(colophon) */
+  .colophon {
+    border-top: 3px double var(--ink);      /* 签名:双细线收尾 */
+    padding: 22px 2px 48px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* ============================================================
+     动效:油墨印上纸的淡入(零 JS)
+     纸是平的 —— 只淡入,不位移、不缩放;
+     报头先印,导语随后,正文滚动到哪印到哪。
+     减少动态效果时自动关闭;老浏览器直接显示,不会白屏
+     ============================================================ */
+  @keyframes ink-in {
+    from { opacity: 0; }
+  }
+  .masthead .issue { animation: ink-in 0.6s ease-out both; }
+  .masthead h1     { animation: ink-in 0.8s ease-out 0.10s both; }
+  .masthead .sub   { animation: ink-in 0.6s ease-out 0.25s both; }
+  .masthead nav    { animation: ink-in 0.6s ease-out 0.35s both; }
+  .lede            { animation: ink-in 0.7s ease-out 0.45s both; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      section.block .sec-head, .spread, .briefs,
+      .feature, .minor-works, .contact, .colophon {
+        animation: ink-in 0.55s ease-out both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
+    }
+  }
+
+  /* ============================================================
+     手机端适配:报纸版面拆成单栏
+     ============================================================ */
+  @media (max-width: 860px) {
+    .spread { grid-template-columns: 1fr; gap: 36px; }
+    .story { column-count: 1; }
+    .rail { max-width: 340px; }
+    .feature { grid-template-columns: 1fr; gap: 12px; padding-bottom: 28px; }
+    .feature .f-body { column-count: 1; }
+    .briefs { grid-template-columns: 1fr; gap: 0; }
+    .minor-works { grid-template-columns: 1fr; gap: 24px; }
+  }
+  @media (max-width: 768px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 20px; }
+    .masthead { padding-top: 36px; }
+    .masthead h1 { font-size: clamp(38px, 11vw, 56px); }
+    .lede { margin-bottom: 52px; }
+    section.block { margin-bottom: 56px; }
+    .contact { margin-bottom: 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="issue">
+      <span class="meta">VOL.01 — [年月]</span>
+      <span class="meta">创刊 [年份] · [你的城市]</span>
+      <span class="meta">免费阅读 · 欢迎转发</span>
+    </div>
+    <h1>[你的名字]</h1>
+    <p class="sub">[一句话介绍你自己]</p>
+    <nav>
+      <a href="#about">关于</a>
+      <a href="#now">近况</a>
+      <a href="#works">作品</a>
+      <a href="#contact">联系</a>
+    </nav>
+  </header>
+
+  <section class="lede">
+    <span class="kicker meta">[你的身份或标签] · [YOUR ROLE]</span>
+    <h2>[把你的一句话定位放大成标题 ——
+      你做什么、为什么做,像杂志封面标题一样写。]</h2>
+    <p class="dek">
+      [两三句开篇导语:这个站是什么、你会在这里放什么、
+      读者为什么要继续看下去。杂志的 dek 段落,克制一点。]
+    </p>
+    <div class="byline">
+      <span class="meta">文 / [你的名字]</span>
+      <span class="meta">[年月] 更新</span>
+    </div>
+  </section>
+
+  <section id="about" class="block">
+    <div class="sec-head">
+      <span class="meta">关于 / About</span>
+      <span class="meta">01</span>
+    </div>
+    <div class="spread">
+      <div class="story">
+        <p>
+          [第一段:从什么时候开始做什么、之前经历过什么、
+          为什么走到现在这条路。首字会自动放大下沉,这段别太短。]
+        </p>
+        <p>
+          [第二段:你现在的工作方式或创作方式。
+          一个人做还是协作、节奏快还是慢、在意什么。]
+        </p>
+        <aside class="pull-quote">
+          [把你的信念或审美写成一句拉引语 ——
+          读者扫版面时会先看到这句,值得为它想五分钟。]
+        </aside>
+        <p>
+          [第三段:一句你的信念或审美 ——
+          你怎么看「做事」这件事,用你自己的口气。]
+        </p>
+      </div>
+      <aside class="rail">
+        <figure class="figure">
+          <div class="img">
+            [ IMG: 你的照片 ]<br>
+            [ 黑白或低饱和 ]<br>
+            [ 3:4 竖版 ]
+          </div>
+          <figcaption class="meta">[图注:拍摄地或年份]</figcaption>
+        </figure>
+        <div class="facts">
+          <div class="row"><span class="meta">坐标</span><span>[你的城市]</span></div>
+          <div class="row"><span class="meta">方向</span><span>[你专注的领域]</span></div>
+          <div class="row"><span class="meta">更新</span><span>[年.月]</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="now" class="block">
+    <div class="sec-head">
+      <span class="meta">近况 / Now</span>
+      <span class="meta">02</span>
+    </div>
+    <div class="briefs">
+      <div class="brief">
+        <span class="meta">[年份 — 至今]</span>
+        <b>[你的作品名]</b> —— [一句话进展]
+      </div>
+      <div class="brief">
+        <span class="meta">[年份 — 至今]</span>
+        <b>[你的作品名]</b> —— [一句话进展]
+      </div>
+      <div class="brief">
+        <span class="meta">[年份 — 至今]</span>
+        <b>[你的作品名]</b> —— [一句话进展]
+      </div>
+      <div class="brief">
+        <span class="meta">[年份 — 至今]</span>
+        <b>[你的作品名]</b> —— [一句话进展]
+      </div>
+    </div>
+  </section>
+
+  <section id="works" class="block">
+    <div class="sec-head">
+      <span class="meta">作品 / Selected Works</span>
+      <span class="meta">03</span>
+    </div>
+
+    <!-- 头条:最拿得出手的那件放这里 -->
+    <article class="feature">
+      <div class="idx">01</div>
+      <div>
+        <div class="w-meta">
+          <span class="meta">[年份]</span>
+          <span class="meta">[材料/形式]</span>
+          <span class="meta">[状态]</span>
+        </div>
+        <h3><a href="#">[你最拿得出手的作品名]</a></h3>
+        <div class="f-body">
+          <p>[头条作品用两三句写透:做了什么、解决什么问题、
+            有什么你自己在意的细节。这是头版位置,值得多写几笔。]</p>
+          <p>[再补一两句:它现在的状态、下一步打算、
+            或者别人怎么评价它。没有就删掉这段。]</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 简讯:后三件,两列排 -->
+    <div class="minor-works">
+
+      <article class="minor">
+        <div class="idx">02</div>
+        <div>
+          <div class="w-meta">
+            <span class="meta">[年份]</span>
+            <span class="meta">[材料/形式]</span>
+          </div>
+          <h4><a href="#">[你的作品名]</a></h4>
+          <p>[一两句描述:做了什么、解决什么问题。]</p>
+        </div>
+      </article>
+
+      <article class="minor">
+        <div class="idx">03</div>
+        <div>
+          <div class="w-meta">
+            <span class="meta">[年份]</span>
+            <span class="meta">[材料/形式]</span>
+          </div>
+          <h4><a href="#">[你的作品名]</a></h4>
+          <p>[一两句描述。]</p>
+        </div>
+      </article>
+
+      <article class="minor">
+        <div class="idx">04</div>
+        <div>
+          <div class="w-meta">
+            <span class="meta">[年份]</span>
+            <span class="meta">[材料/形式]</span>
+          </div>
+          <h4><a href="#">[你的作品名]</a></h4>
+          <p>[一两句描述。]</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="sec-head">
+      <span class="meta">联系 / Contact</span>
+      <span class="meta">04</span>
+    </div>
+    <a href="mailto:[你的邮箱]" class="mail">[你的邮箱]</a>
+    <div class="socials">
+      <a href="#">[你的社交账号]</a><span class="sep">/</span>
+      <a href="#">[你的社交账号]</a><span class="sep">/</span>
+      <a href="#">[你的社交账号]</a>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span class="meta">© 2026 [你的名字] · [你的城市]</span>
+    <span class="meta">P.01 — 全一版</span>
+    <span class="meta">纯 HTML 手工排版 · 最后更新 [年.月]</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
