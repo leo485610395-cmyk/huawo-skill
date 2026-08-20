@@ -1,0 +1,645 @@
+<!--
+============================================================
+极简现代风 · 个人介绍站模板
+============================================================
+
+【使用方法】
+1. 用记事本/VS Code/任何文本编辑器打开这个文件
+2. 按 Ctrl+H(或 Cmd+H)打开查找替换
+3. 把下面这些占位符替换成你自己的内容:
+
+   [你的名字]              → 你的名字或 ID
+   [一句话介绍你自己]      → 比如「一个在大学做 OPC 的人」
+   [你的作品名]            → 你的项目/作品名字
+   [你的邮箱]              → 你的联系邮箱
+   [你的社交账号]          → 你的 Twitter/GitHub/小红书 等
+   [你的城市]              → 你所在的城市
+
+4. 替换完保存,双击文件用浏览器打开看效果
+5. 把图片占位 [IMG: xxx] 换成你自己的图片(放到同目录,改 src 路径)
+
+【风格说明】
+极简现代风 = 黑白灰 + 大量留白 + 无衬线 + 左侧目录式导航
+适合:独立开发者、设计师、写作者,克制有质感的个人品牌站
+
+【不要改的部分】
+- 不要改 <style> 标签里的 CSS(会破坏视觉效果)
+- 不要改板块数量和顺序(会破坏布局)
+- 不要删左侧导航栏(会破坏整体设计)
+
+【作者】化我(huawo.netlify.app)
+============================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[你的名字] — [一句话介绍你自己]</title>
+
+<!-- ============================================================
+     v2 测试日志:用新心法在集合站找元素融入
+     ============================================================
+     本次融入的 2 个元素(从 minimal.gallery / awwwards 反复出现的极简现代风要素提炼):
+
+     【元素 1】左侧固定竖向目录导航(Swiss style / 杂志目录式)
+       - 来源依据:minimal.gallery 和 awwwards 上的极简获奖作品大量采用
+       - v1 是顶部横向导航(普通网站感),v2 改成左侧目录(设计师作品集感)
+       - 这是极简现代风的标志性布局,不是炫技,是回到该风格的"正典"
+
+     【元素 2】编号系统贯穿全站(板块编号 + 作品细分编号)
+       - 来源依据:Swiss style 用数字代替图标,是极简现代风的核心视觉语言
+       - v1 只有 01-05 大板块编号,v2 扩展到每个 work card 也加编号(01-04)
+       - 让全站视觉语言统一,看上去像一个完整作品而不是拼凑
+
+     纪律自检:
+     - 两个元素都来自极简现代风的"正典",没有混入其他风格
+     - 没有加任何动效(hover 只是颜色变化,不是动画)
+     - 没有加颜色(还是黑白灰),没有加装饰图形
+     ============================================================ -->
+<style>
+  :root {
+    --bg: #fafafa;
+    --bg-alt: #f1f1f1;
+    --ink: #111111;
+    --ink-soft: #555555;
+    --ink-faint: #999999;
+    --line: #e4e4e4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    font-size: 17px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;  /* v2 新增:全站等宽数字,让所有编号/年份视觉对齐 */
+  }
+
+  /* ============================================================
+     【v2 元素 1】左侧固定竖向目录导航
+     ============================================================ */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 260px;
+    padding: 48px 32px;
+    background: var(--bg);
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+  }
+  .sidebar .brand {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .sidebar .brand-sub {
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 64px;
+  }
+  .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .sidebar nav a {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    align-items: baseline;
+    gap: 12px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+  .sidebar nav a:hover { color: var(--ink); }
+  .sidebar nav a .num {
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+  }
+  .sidebar .footer {
+    margin-top: auto;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+    line-height: 1.7;
+  }
+  .sidebar .footer .loc { margin-bottom: 4px; }
+
+  /* v2 新增:主内容区右移,给侧栏让位 */
+  .main {
+    margin-left: 260px;
+  }
+
+  /* ============================================================
+     Hero 首屏(微调,适配新布局)
+     ============================================================ */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 80px;
+    max-width: 1100px;
+  }
+  .hero .eyebrow {
+    font-size: 12px;
+    color: var(--ink-faint);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .hero h1 {
+    font-size: clamp(48px, 9vw, 140px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 40px;
+  }
+  .hero h1 .light { color: var(--ink-faint); font-weight: 300; }
+  .hero .tagline {
+    max-width: 540px;
+    font-size: 19px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .hero .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 80px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.25em;
+  }
+
+  /* ============================================================
+     通用板块容器
+     ============================================================ */
+  section.block {
+    padding: 120px 80px;
+    max-width: 1100px;
+    border-top: 1px solid var(--line);
+  }
+  .block-head {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 64px;
+  }
+  .block-num {
+    font-size: 12px;
+    color: var(--ink-faint);
+    letter-spacing: 0.15em;
+  }
+  .block-head h2 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  /* 关于我 */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-portrait {
+    aspect-ratio: 4 / 5;
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  .about-text p { margin-bottom: 22px; color: var(--ink); }
+  .about-text p:last-child { color: var(--ink-soft); }
+
+  /* 我在做的事 */
+  .now-list { display: flex; flex-direction: column; }
+  .now-item {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 40px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .now-item:first-child { border-top: 1px solid var(--line); }
+  .now-item .when {
+    color: var(--ink-faint);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+  }
+  .now-item .what h3 {
+    font-size: 21px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .now-item .what p {
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  /* ============================================================
+     【v2 元素 2】作品卡扩展编号系统
+     - 每个 work card 在标题前加 01/02/03/04 编号
+     - 跟大板块编号(01-05)形成统一的视觉语言
+     - hover 改成纯颜色变化(去掉 translate 动画)
+     ============================================================ */
+  .work-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px 48px;
+  }
+  .work-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;  /* v2 改动:去掉 transform 动画,只留颜色过渡 */
+  }
+  .work-card:hover .work-title { color: var(--ink-faint); }  /* hover 让标题变灰,反向强调 */
+  .work-thumb {
+    aspect-ratio: 4 / 3;
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;  /* v2 新增:hover 时边框颜色微变,克制反馈 */
+  }
+  .work-card:hover .work-thumb { border-color: var(--ink-faint); }
+  .work-meta {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;  /* v2 改动:新增编号列 */
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .work-meta .work-num {  /* v2 新增:作品编号,跟大板块编号呼应 */
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+  }
+  .work-meta .year {
+    color: var(--ink-faint);
+    font-size: 13px;
+  }
+  .work-card h3 {
+    font-size: 19px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    transition: color 0.2s;
+  }
+  .work-card p {
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+
+  /* 想法 */
+  .notes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    max-width: 720px;
+  }
+  .note {
+    padding-left: 24px;
+    border-left: 2px solid var(--ink);
+  }
+  .note .date {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-bottom: 12px;
+    letter-spacing: 0.08em;
+  }
+  .note p {
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  /* 联系 */
+  .contact {
+    background: var(--ink);
+    color: #fafafa;
+    padding: 140px 80px;
+  }
+  .contact-inner { max-width: 1100px; margin: 0 auto; }
+  .contact .block-head h2 { color: #fafafa; }
+  .contact .block-num { color: #777; }
+  .contact .email {
+    font-size: clamp(28px, 5vw, 56px);
+    color: #fafafa;
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+    margin-bottom: 48px;
+    transition: border-color 0.2s;
+  }
+  .contact .email:hover { border-color: #fafafa; }
+  .contact .socials {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .contact .socials a {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+  .contact .socials a:hover { color: #fafafa; }
+
+  /* 页脚 */
+  footer {
+    background: var(--ink);
+    color: #666;
+    padding: 40px 80px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-top: 1px solid #222;
+  }
+
+  /* ============================================================
+     手机端适配(v2 重点改:侧栏在手机端变成顶部精简导航)
+     ============================================================ */
+  @media (max-width: 768px) {
+    body { font-size: 16px; }
+
+    /* v2 改动:侧栏在手机端变成顶部品牌条 + 横向导航 */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: auto;
+      flex-direction: row;
+      align-items: center;
+      padding: 16px 24px;
+      gap: 24px;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .sidebar .brand { margin-bottom: 0; font-size: 13px; }
+    .sidebar .brand-sub { display: none; }
+    .sidebar nav {
+      flex-direction: row;
+      gap: 16px;
+      margin-left: auto;
+    }
+    .sidebar nav a { grid-template-columns: auto; gap: 0; font-size: 13px; }
+    .sidebar nav a .num { display: none; }
+    .sidebar .footer { display: none; }
+
+    .main { margin-left: 0; }
+    .hero { padding: 0 24px; }
+    .hero h1 { font-size: clamp(40px, 13vw, 72px); }
+    .hero .tagline { font-size: 17px; }
+    .hero .scroll-hint { left: 24px; }
+    section.block { padding: 80px 24px; }
+    .block-head { margin-bottom: 40px; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .now-item { grid-template-columns: 1fr; gap: 6px; }
+    .work-grid { grid-template-columns: 1fr; gap: 48px; }
+    .contact { padding: 80px 24px; }
+    footer { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- v2 元素 1:左侧固定竖向目录导航 -->
+<aside class="sidebar">
+  <div class="brand">[你的名字] / [YOUR NAME]</div>
+  <div class="brand-sub">[你的身份或标签]</div>
+  <nav>
+    <a href="#about"><span class="num">01</span><span>关于</span></a>
+    <a href="#now"><span class="num">02</span><span>正在做</span></a>
+    <a href="#work"><span class="num">03</span><span>作品</span></a>
+    <a href="#notes"><span class="num">04</span><span>想法</span></a>
+    <a href="#contact"><span class="num">05</span><span>联系</span></a>
+  </nav>
+  <div class="footer">
+    <div class="loc">[你的城市] · [YOUR CITY]</div>
+    <div>© 2026</div>
+  </div>
+</aside>
+
+<main class="main">
+
+<header class="hero">
+  <div class="eyebrow">[你的身份或标签] · [YOUR ROLE]</div>
+  <h1>
+    [一句话<br>
+    <span class="light">介绍你自己。]</span>
+  </h1>
+  <p class="tagline">
+    我是[你的名字]。[这里写一段简短的自我介绍:你做什么、关心什么、
+    这个站放了哪些东西。两到三句话,克制一点。]
+  </p>
+  <div class="scroll-hint">↓ 向下滚动</div>
+</header>
+
+<section id="about" class="block">
+  <div class="block-head">
+    <span class="block-num">01 ——</span>
+    <h2>关于我</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-portrait">
+      [ IMG: 你的半身照 ]<br>
+      [ 黑白 / 低饱和 ]<br>
+      [ 4:5 竖版 ]
+    </div>
+    <div class="about-text">
+      <p>
+        我叫[你的名字],[简单介绍一下你的背景:从什么时候开始做什么、
+        之前经历过什么、为什么走到现在这条路]。
+      </p>
+      <p>
+        [写一句你的工作理念或信念 —— 你怎么看「做事」这件事,
+        用你自己的口气,一两句话就够。]
+      </p>
+      <p>
+        目前住在[你的城市]。[说一两个你的爱好或日常,比如喜欢什么、
+        怎么消磨时间]。如果你想聊聊,欢迎写信。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="now" class="block">
+  <div class="block-head">
+    <span class="block-num">02 ——</span>
+    <h2>正在做</h2>
+  </div>
+  <div class="now-list">
+    <div class="now-item">
+      <div class="when">[年份 — 至今]</div>
+      <div class="what">
+        <h3>[你的作品名 —— 一句话描述它是什么]</h3>
+        <p>[这个项目现在的状态、解决什么问题、一句话进展。]</p>
+      </div>
+    </div>
+    <div class="now-item">
+      <div class="when">[年份 — 至今]</div>
+      <div class="what">
+        <h3>[你的作品名 —— 一句话描述它是什么]</h3>
+        <p>[这个项目现在的状态、解决什么问题、一句话进展。]</p>
+      </div>
+    </div>
+    <div class="now-item">
+      <div class="when">[年份 — 至今]</div>
+      <div class="what">
+        <h3>[你的作品名 —— 一句话描述它是什么]</h3>
+        <p>[这个项目现在的状态、解决什么问题、一句话进展。]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- v2 元素 2:作品卡每个都加 01-04 编号 -->
+<section id="work" class="block">
+  <div class="block-head">
+    <span class="block-num">03 ——</span>
+    <h2>选了一些作品</h2>
+  </div>
+  <div class="work-grid">
+    <a href="#" class="work-card">
+      <div class="work-thumb">
+        [ IMG: 作品封面图 ]<br>
+        [ 你的作品截图 ]<br>
+        [ 4:3 横版 ]
+      </div>
+      <div class="work-meta">
+        <span class="work-num">01</span>
+        <h3 class="work-title">[你的作品名]</h3>
+        <span class="year">[年份]</span>
+      </div>
+      <p>[一句话描述:平台 / 做了什么 / 状态]</p>
+    </a>
+
+    <a href="#" class="work-card">
+      <div class="work-thumb">
+        [ IMG: 作品封面图 ]<br>
+        [ 你的作品截图 ]<br>
+        [ 4:3 横版 ]
+      </div>
+      <div class="work-meta">
+        <span class="work-num">02</span>
+        <h3 class="work-title">[你的作品名]</h3>
+        <span class="year">[年份]</span>
+      </div>
+      <p>[一句话描述:平台 / 做了什么 / 状态]</p>
+    </a>
+
+    <a href="#" class="work-card">
+      <div class="work-thumb">
+        [ IMG: 作品封面图 ]<br>
+        [ 你的作品截图 ]<br>
+        [ 4:3 横版 ]
+      </div>
+      <div class="work-meta">
+        <span class="work-num">03</span>
+        <h3 class="work-title">[你的作品名]</h3>
+        <span class="year">[年份]</span>
+      </div>
+      <p>[一句话描述:平台 / 做了什么 / 状态]</p>
+    </a>
+
+    <a href="#" class="work-card">
+      <div class="work-thumb">
+        [ IMG: 作品封面图 ]<br>
+        [ 你的作品截图 ]<br>
+        [ 4:3 横版 ]
+      </div>
+      <div class="work-meta">
+        <span class="work-num">04</span>
+        <h3 class="work-title">[你的作品名]</h3>
+        <span class="year">[年份]</span>
+      </div>
+      <p>[一句话描述:平台 / 做了什么 / 状态]</p>
+    </a>
+  </div>
+</section>
+
+<section id="notes" class="block">
+  <div class="block-head">
+    <span class="block-num">04 ——</span>
+    <h2>一些想法</h2>
+  </div>
+  <div class="notes">
+    <div class="note">
+      <div class="date">[年.月]</div>
+      <p>
+        [这里写一段你想分享的想法或观点。两到四句话,讲一个完整的小观点就行。]
+      </p>
+    </div>
+    <div class="note">
+      <div class="date">[年.月]</div>
+      <p>
+        [这里写一段你想分享的想法或观点。两到四句话,讲一个完整的小观点就行。]
+      </p>
+    </div>
+    <div class="note">
+      <div class="date">[年.月]</div>
+      <p>
+        [这里写一段你想分享的想法或观点。两到四句话,讲一个完整的小观点就行。]
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="contact-inner">
+    <div class="block-head">
+      <span class="block-num">05 ——</span>
+      <h2>想聊聊?</h2>
+    </div>
+    <a href="mailto:[你的邮箱]" class="email">[你的邮箱]</a>
+    <div class="socials">
+      <a href="#">[你的社交账号]</a>
+      <a href="#">[你的社交账号]</a>
+      <a href="#">[你的社交账号]</a>
+      <a href="#">RSS / 订阅</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 [你的名字]. 在[你的城市],[一句话署名]。</div>
+  <div>最后更新 — [年.月]</div>
+</footer>
+
+</main>
+
+</body>
+</html>

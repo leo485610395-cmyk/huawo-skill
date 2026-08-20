@@ -1,0 +1,966 @@
+<!--
+============================================================
+温暖手作风 · 个人介绍站模板
+============================================================
+
+【使用方法】
+1. 用记事本/VS Code/任何文本编辑器打开这个文件
+2. 按 Ctrl+H(或 Cmd+H)打开查找替换
+3. 把下面这些占位符替换成你自己的内容:
+
+   [你的名字]              → 你的名字或 ID
+   [一句话介绍你自己]      → 比如「一个喜欢做 XX 的人」
+   [你的作品名]            → 你的作品/项目名字
+   [你的邮箱]              → 你的联系邮箱
+   [你的社交账号]          → 你的 微博/小红书/Behance 等
+
+4. 替换完保存,双击文件用浏览器打开看效果
+5. 把图片占位 [IMG: xxx] 换成你自己的图片(放到同目录,改 src 路径)
+
+【风格说明】
+温暖手作风 = 米色暖橙 + 手写感 + 插画感 + 纸张质感
+适合:插画师、手作人、生活博主,有生活气息的个人站
+
+【不要改的部分】
+- 不要改 <style> 标签里的 CSS(会破坏纸张质感和手绘装饰)
+- 不要改板块数量和顺序(会破坏布局)
+- 不要删除和纸胶带/缝线虚线等装饰元素
+
+【作者】化我(huawo.netlify.app)
+============================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[你的名字] · [一句话介绍你自己]</title>
+
+<!--
+============================================================================
+  v2 升级说明 · 温暖手作风个人介绍站
+============================================================================
+
+  在 v1 基础上,从「手作 / 手账 / 插画家作品集」站的共识中,融入了 3 个细节元素。
+  所有改动都只动 CSS,板块数量、内容、布局、文案与 v1 完全一致。
+
+  ── 融入的 3 个元素 ──────────────────────────────────────────────
+
+  【元素 1】纸张噪点颗粒(grain / paper noise)
+    - 来源:CSS-Tricks《Grainy Gradients》、ibelick《Creating grainy backgrounds
+            with CSS》、Adobe Stock「水彩纸纹理 seamless」——这是所有手作/
+            水彩/插画家站的共识基底:「数字屏要看起来像纸,不要像塑料」
+    - 实现:用一段内联 SVG <feTurbulence> 生成极淡的颗粒,作为 body 与
+            journal 区的叠加层;opacity 压到 ~0.045,只在仔细看时才感觉到
+    - 纪律自检:不是炫技,是手作风该有的「手感基底」;不加任何动效
+
+  【元素 2】和纸胶带(washi tape)
+    - 来源:米画师作品集站、PopDaily「手帐设计 TOP10」、Pinterest 手账素材
+            库共识——和纸胶带是手账/手作站最标志性的视觉记号
+    - 实现:在每张作品卡和「我在画什么」插图卡顶部,斜贴一条半透明胶带
+            (用 ::before 伪元素 + 半透明暖色背景 + 手撕齿状边缘 mask)
+    - 纪律自检:静态装饰,无交互;颜色取自 v1 既有暖橙/草绿/粉玫瑰,不引入
+            新色,绝无风格混乱
+
+  【元素 3】手绘缝线虚线边框(hand-drawn stitch border)
+    - 来源:Adobe Stock「Stitch Border」手作缝线素材、Dribbble「cozy design」
+            标签下大量手作风卡片——缝线 = 手工做的视觉暗号
+    - 实现:给主要卡片(.work、.entry、.about-illust .ph)加一层内描边的
+            双层虚线(border + inset box-shadow),模拟缝线轨迹
+    - 纪律自检:纯静态细节,不加动画;v1 已有 dashed 用在导航/页脚/分隔线,
+            这里只是把同一种语言系统化延伸到卡片,不算混风格
+
+  ── 不做的事(明确排除) ────────────────────────────────────────
+    - 不加 hover 动画以外的动效(v1 已有的保留)
+    - 不加 3D / parallax / 复杂交互
+    - 不引入极简风(几何冷感)、水墨风(留白 + 墨色)的任何元素
+    - 不改板块结构、内容、文案、布局
+============================================================================
+-->
+
+<!-- 字体:手写感标题 + 暖衬线正文 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Ma+Shan+Zheng&family=LXGW+Marker+Gothic&family=Long+Cang&display=swap" rel="stylesheet">
+
+<style>
+  /* ===== 配色(温暖手作风核心) ===== */
+  :root{
+    --paper:        #f5efe2;  /* 主背景:温暖米色,像旧纸 */
+    --paper-deep:   #efe6d3;  /* 略深米色,做层次 */
+    --paper-shadow: #e8dcc3;  /* 卡片阴影色,米黄 */
+    --ink:          #5a4634;  /* 主文字:暖棕色,不用纯黑 */
+    --ink-soft:     #8a7560;  /* 次要文字:浅棕灰 */
+    --accent:       #d97742;  /* 暖橙:按钮、强调 */
+    --accent-deep:  #b85a26;  /* 深暖橙:hover */
+    --leaf:         #8aa86b;  /* 草绿:插画装饰用 */
+    --rose:         #d4879a;  /* 粉玫瑰:花卉装饰用 */
+    --cream:        #fbf6ea;  /* 卡片高光:奶油白 */
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'LXGW Marker Gothic', 'Segoe UI', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.8;
+    font-size: 17px;
+    /* 米色纸张感:加一层极淡的肌理 */
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(217,119,66,0.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(138,168,107,0.04) 0%, transparent 40%);
+    background-attachment: fixed;
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     【v2 · 元素 1】纸张噪点颗粒(全站纸感基底)
+     一段内联 SVG feTurbulence,极淡地铺在整页上,只让屏幕「不再像塑料」。
+     opacity 控制在 0.045,远低于会干扰阅读的程度。
+     ============================================================ */
+  body::before{
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.36  0 0 0 0 0.28  0 0 0 0 0.20  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 240px 240px;
+  }
+  /* 让所有内容盖在噪点层之上 */
+  header, section, footer, .divider{ position: relative; z-index: 1; }
+
+  /* ===== 手写感文字通用 ===== */
+  .handwrite{
+    font-family:'Caveat', 'Ma Shan Zheng', cursive;
+    font-weight: 600;
+  }
+  .brush{ font-family:'Ma Shan Zheng', 'Long Cang', cursive; }
+
+  /* ===== 顶部导航 ===== */
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(245,239,226,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 2px dashed var(--paper-shadow);
+    padding: 14px 0;
+  }
+  .nav-inner{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .logo{
+    font-family:'Ma Shan Zheng', cursive;
+    font-size: 28px;
+    color: var(--accent-deep);
+    letter-spacing: 2px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .logo::before{
+    content:"✿";
+    color: var(--rose);
+    font-size: 22px;
+  }
+  nav ul{
+    list-style: none;
+    display: flex;
+    gap: 26px;
+    flex-wrap: wrap;
+  }
+  nav a{
+    text-decoration: none;
+    color: var(--ink);
+    font-family:'Caveat', cursive;
+    font-size: 22px;
+    font-weight: 600;
+    position: relative;
+    padding: 2px 4px;
+    transition: color .2s;
+  }
+  nav a:hover{ color: var(--accent-deep); }
+  nav a::after{
+    content:"";
+    position:absolute;
+    left: 0; bottom: -2px;
+    width: 0; height: 2px;
+    background: var(--accent);
+    transition: width .25s ease;
+  }
+  nav a:hover::after{ width: 100%; }
+
+  /* ===== 通用容器 ===== */
+  .wrap{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+  section{
+    padding: 90px 0;
+    position: relative;
+  }
+
+  /* ===== Hero:你好这是我 ===== */
+  .hero{
+    padding-top: 80px;
+    padding-bottom: 60px;
+    overflow: hidden;
+  }
+  .hero-grid{
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 50px;
+    align-items: center;
+  }
+  .hero-text .hello{
+    font-family:'Caveat', cursive;
+    font-size: 38px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .hero-text h1{
+    font-family:'Ma Shan Zheng', cursive;
+    font-size: 78px;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 18px;
+    letter-spacing: 2px;
+  }
+  .hero-text h1 .underline{
+    background: linear-gradient(transparent 62%, rgba(217,119,66,0.35) 62%);
+    padding: 0 4px;
+  }
+  .hero-text .tagline{
+    font-size: 21px;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+    max-width: 460px;
+  }
+  .hero-text .tagline strong{ color: var(--accent-deep); }
+
+  .hero-badges{
+    display:flex; gap: 12px; flex-wrap:wrap; margin-bottom: 32px;
+  }
+  .badge{
+    background: var(--cream);
+    border: 2px solid var(--paper-shadow);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-family:'Caveat', cursive;
+    font-size: 20px;
+    color: var(--ink);
+    box-shadow: 2px 2px 0 var(--paper-shadow);
+  }
+
+  .cta-row{ display:flex; gap: 14px; flex-wrap:wrap; }
+  .btn{
+    display:inline-block;
+    padding: 12px 26px;
+    border-radius: 999px;
+    font-family:'Caveat', cursive;
+    font-size: 22px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid var(--accent);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-primary{
+    background: var(--accent);
+    color: var(--cream);
+    box-shadow: 4px 4px 0 var(--accent-deep);
+  }
+  .btn-primary:hover{ transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--accent-deep); }
+  .btn-ghost{
+    background: transparent;
+    color: var(--accent-deep);
+  }
+  .btn-ghost:hover{ background: var(--cream); }
+
+  /* 头像卡(圆形 + 不规则贴纸感) */
+  .hero-portrait{
+    position: relative;
+    justify-self: center;
+  }
+  .portrait-frame{
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 6px solid var(--paper-shadow);
+    box-shadow: 8px 8px 0 var(--paper-shadow);
+    display:flex; align-items:center; justify-content:center;
+    transform: rotate(-3deg);
+    overflow: hidden;
+    position: relative;
+  }
+  .portrait-frame .img-ph{
+    width: 100%; height: 100%;
+    display:flex; align-items:center; justify-content:center;
+    background: repeating-linear-gradient(45deg, var(--paper-deep), var(--paper-deep) 10px, var(--cream) 10px, var(--cream) 20px);
+    font-family:'Caveat', cursive;
+    color: var(--ink-soft);
+    text-align:center;
+    font-size: 18px;
+    padding: 20px;
+  }
+  /* 装饰小花,围绕头像 */
+  .deco{
+    position:absolute;
+    font-size: 36px;
+    pointer-events:none;
+  }
+  .deco-1{ top:-10px; left:-20px; transform:rotate(-15deg);}
+  .deco-2{ top:30px; right:-30px; font-size:30px;}
+  .deco-3{ bottom:-10px; left:30px; font-size:32px; transform:rotate(10deg);}
+  .deco-4{ bottom:20px; right:-10px; font-size:26px;}
+
+  /* 分隔手绘线 */
+  .divider{
+    text-align:center;
+    margin: 30px auto;
+    color: var(--accent);
+    letter-spacing: 14px;
+    font-size: 22px;
+  }
+
+  /* ===== 板块标题 ===== */
+  .section-title{
+    text-align:center;
+    margin-bottom: 50px;
+  }
+  .section-title .kicker{
+    font-family:'Caveat', cursive;
+    color: var(--accent);
+    font-size: 26px;
+    display:block;
+    margin-bottom: 4px;
+  }
+  .section-title h2{
+    font-family:'Ma Shan Zheng', cursive;
+    font-size: 46px;
+    color: var(--ink);
+    position: relative;
+    display:inline-block;
+    padding: 0 12px;
+  }
+  .section-title h2::before,
+  .section-title h2::after{
+    content:"❀";
+    color: var(--rose);
+    font-size: 24px;
+    margin: 0 12px;
+    vertical-align: middle;
+  }
+
+  /* ===== 我在画什么(三段叙述 + 插画) ===== */
+  .about-grid{
+    display:grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 50px;
+    align-items: center;
+  }
+
+  /* ============================================================
+     【v2 · 元素 2 & 3 共同作用】插图卡:和纸胶带 + 缝线虚线内描边
+     ============================================================ */
+  .about-illust .ph{
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: var(--cream);
+    border: 4px solid var(--paper-shadow);
+    border-radius: 18px;
+    box-shadow: 10px 10px 0 var(--paper-shadow);
+    transform: rotate(-2deg);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    font-family:'Caveat', cursive;
+    color: var(--ink-soft);
+    font-size: 20px;
+    padding: 24px;
+    line-height: 1.6;
+    position: relative;
+    /* 元素 3:缝线虚线内描边 —— inset 阴影做出第二条虚线,模拟缝线轨迹 */
+    box-shadow:
+      10px 10px 0 var(--paper-shadow),
+      inset 0 0 0 4px var(--cream),
+      inset 0 0 0 5px var(--paper-shadow),
+      inset 0 0 0 9px var(--cream),
+      inset 0 0 0 10px rgba(184,90,38,0.35);
+  }
+  /* 元素 2:和纸胶带 —— 顶部斜贴一条 */
+  .about-illust .ph::before{
+    content:"";
+    position:absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-4deg);
+    width: 130px;
+    height: 30px;
+    background:
+      repeating-linear-gradient(90deg,
+        rgba(217,119,66,0.55) 0 14px,
+        rgba(217,119,66,0.35) 14px 28px);
+    /* 两侧手撕齿状边缘 */
+    -webkit-mask:
+      radial-gradient(circle 4px at 0 50%, transparent 98%, #000 100%) left/8px 100% no-repeat,
+      radial-gradient(circle 4px at 100% 50%, transparent 98%, #000 100%) right/8px 100% no-repeat,
+      linear-gradient(#000,#000) center/116px 100% no-repeat;
+            mask:
+      radial-gradient(circle 4px at 0 50%, transparent 98%, #000 100%) left/8px 100% no-repeat,
+      radial-gradient(circle 4px at 100% 50%, transparent 98%, #000 100%) right/8px 100% no-repeat,
+      linear-gradient(#000,#000) center/116px 100% no-repeat;
+    box-shadow: 0 2px 4px rgba(90,70,52,0.15);
+    z-index: 2;
+  }
+  .about-text p{
+    margin-bottom: 18px;
+    font-size: 18px;
+  }
+  .about-text .lead{
+    font-family:'Ma Shan Zheng', cursive;
+    font-size: 26px;
+    color: var(--accent-deep);
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+  .about-text em{
+    font-style: normal;
+    background: linear-gradient(transparent 60%, rgba(212,135,154,0.4) 60%);
+    color: var(--ink);
+    padding: 0 3px;
+  }
+
+  .themes{
+    display:flex; gap:14px; flex-wrap:wrap; margin-top: 20px;
+  }
+  .theme-chip{
+    background: var(--cream);
+    border: 2px dashed var(--accent);
+    padding: 8px 18px;
+    border-radius: 14px;
+    font-family:'Caveat', cursive;
+    font-size: 20px;
+    color: var(--accent-deep);
+  }
+
+  /* ===== 作品集 ===== */
+  .gallery{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+  .work{
+    background: var(--cream);
+    border: 4px solid var(--paper-shadow);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 6px 6px 0 var(--paper-shadow);
+    transition: transform .2s, box-shadow .2s;
+    position: relative;
+    /* 元素 3:缝线虚线内描边 */
+    box-shadow:
+      6px 6px 0 var(--paper-shadow),
+      inset 0 0 0 3px var(--cream),
+      inset 0 0 0 4px rgba(184,90,38,0.28);
+  }
+  .work:nth-child(2){ transform: translateY(18px); }
+  .work:nth-child(4){ transform: translateY(18px); }
+  .work:hover{
+    transform: translateY(-4px) rotate(-1deg);
+    box-shadow:
+      10px 10px 0 var(--accent),
+      inset 0 0 0 3px var(--cream),
+      inset 0 0 0 4px rgba(184,90,38,0.45);
+  }
+
+  /* 元素 2:和纸胶带 —— 三色轮换(暖橙 / 草绿 / 粉玫瑰),都用 v1 既有色 */
+  .work::before{
+    content:"";
+    position:absolute;
+    top: -10px;
+    left: 22px;
+    width: 70px;
+    height: 22px;
+    transform: rotate(-6deg);
+    background:
+      repeating-linear-gradient(45deg,
+        rgba(217,119,66,0.55) 0 8px,
+        rgba(251,246,234,0.25) 8px 16px);
+    -webkit-mask:
+      radial-gradient(circle 3px at 0 50%, transparent 98%, #000 100%) left/6px 100% no-repeat,
+      radial-gradient(circle 3px at 100% 50%, transparent 98%, #000 100%) right/6px 100% no-repeat,
+      linear-gradient(#000,#000) center/58px 100% no-repeat;
+            mask:
+      radial-gradient(circle 3px at 0 50%, transparent 98%, #000 100%) left/6px 100% no-repeat,
+      radial-gradient(circle 3px at 100% 50%, transparent 98%, #000 100%) right/6px 100% no-repeat,
+      linear-gradient(#000,#000) center/58px 100% no-repeat;
+    box-shadow: 0 1px 3px rgba(90,70,52,0.18);
+    z-index: 2;
+  }
+  /* 让卡片错位里,胶带角度也微微错开,更像随手贴的 */
+  .work:nth-child(2)::before,
+  .work:nth-child(5)::before{
+    transform: rotate(5deg);
+    background:
+      repeating-linear-gradient(45deg,
+        rgba(138,168,107,0.55) 0 8px,
+        rgba(251,246,234,0.25) 8px 16px);
+    left: auto; right: 22px;
+  }
+  .work:nth-child(3)::before,
+  .work:nth-child(6)::before{
+    transform: rotate(-3deg);
+    background:
+      repeating-linear-gradient(45deg,
+        rgba(212,135,154,0.55) 0 8px,
+        rgba(251,246,234,0.25) 8px 16px);
+  }
+  /* nth-child(2)(4) 因为 transform translateY 已被占用,胶带位置不能再用 transform,
+     上面 ::before 是独立的伪元素 transform,不冲突。 */
+
+  .work .thumb{
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 10px;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    font-family:'Caveat', cursive;
+    color: var(--ink-soft);
+    font-size: 18px;
+    padding: 16px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  /* 每个作品占位的纹理背景轮换 */
+  .work:nth-child(1) .thumb{ background: repeating-linear-gradient(135deg, #f3e6d0, #f3e6d0 12px, #fbf6ea 12px, #fbf6ea 24px);}
+  .work:nth-child(2) .thumb{ background: repeating-linear-gradient(45deg, #f0e3d6, #f0e3d6 12px, #faf3e7 12px, #faf3e7 24px);}
+  .work:nth-child(3) .thumb{ background: radial-gradient(circle at 30% 30%, #f5e9d4 0%, #fbf6ea 70%);}
+  .work:nth-child(4) .thumb{ background: repeating-linear-gradient(90deg, #f1e4d2, #f1e4d2 12px, #fcf7ec 12px, #fcf7ec 24px);}
+  .work:nth-child(5) .thumb{ background: radial-gradient(circle at 70% 40%, #f4e7d0 0%, #fbf6ea 70%);}
+  .work:nth-child(6) .thumb{ background: repeating-linear-gradient(135deg, #efe1cc, #efe1cc 10px, #faf4e8 10px, #faf4e8 20px);}
+
+  .work h3{
+    font-family:'Ma Shan Zheng', cursive;
+    font-size: 24px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .work .meta{
+    font-family:'Caveat', cursive;
+    color: var(--accent);
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .work p{
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  /* ===== 我的日常(时间轴) ===== */
+  .journal{
+    background: var(--paper-deep);
+    border-top: 2px dashed var(--paper-shadow);
+    border-bottom: 2px dashed var(--paper-shadow);
+    position: relative;
+  }
+  /* 【v2 · 元素 1】journal 区也补一层略微的纸纹,加深「翻开日记本」的感觉 */
+  .journal::before{
+    content:"";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n2'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.36  0 0 0 0 0.28  0 0 0 0 0.20  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n2)'/></svg>");
+    background-size: 240px 240px;
+  }
+  .journal > .wrap{ position: relative; z-index: 1; }
+
+  .timeline{
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    padding-left: 30px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left: 6px; top: 10px; bottom: 10px;
+    width: 2px;
+    background: repeating-linear-gradient(var(--accent) 0 6px, transparent 6px 12px);
+  }
+  .entry{
+    position: relative;
+    margin-bottom: 36px;
+    background: var(--cream);
+    padding: 20px 24px;
+    border-radius: 14px;
+    border: 2px solid var(--paper-shadow);
+    box-shadow:
+      4px 4px 0 var(--paper-shadow),
+      inset 0 0 0 3px var(--cream),
+      inset 0 0 0 4px rgba(184,90,38,0.25);
+  }
+  .entry::before{
+    content:"✿";
+    position:absolute;
+    left: -32px; top: 22px;
+    background: var(--paper-deep);
+    color: var(--rose);
+    font-size: 22px;
+    width: 26px; height: 26px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .entry .date{
+    font-family:'Caveat', cursive;
+    color: var(--accent);
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .entry h4{
+    font-family:'Ma Shan Zheng', cursive;
+    font-size: 24px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .entry p{ color: var(--ink-soft); font-size: 16px; }
+
+  /* ===== 联系我 ===== */
+  .contact{
+    text-align:center;
+    padding-top: 100px;
+    padding-bottom: 80px;
+  }
+  .contact .invite{
+    font-family:'Ma Shan Zheng', cursive;
+    font-size: 42px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .contact .sub{
+    font-size: 19px;
+    color: var(--ink-soft);
+    margin-bottom: 36px;
+  }
+  .contact-links{
+    display:flex; gap: 20px; justify-content:center; flex-wrap:wrap;
+    margin-bottom: 30px;
+  }
+  .contact-link{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 12px 24px;
+    background: var(--cream);
+    border: 2px solid var(--paper-shadow);
+    border-radius: 999px;
+    font-family:'Caveat', cursive;
+    font-size: 22px;
+    color: var(--ink);
+    text-decoration: none;
+    box-shadow: 3px 3px 0 var(--paper-shadow);
+    transition: transform .15s;
+  }
+  .contact-link:hover{ transform: translateY(-3px) rotate(-1deg); color: var(--accent-deep);}
+  .contact-link .ico{ font-size: 22px; }
+
+  .footnote{
+    margin-top: 50px;
+    color: var(--ink-soft);
+    font-family:'Caveat', cursive;
+    font-size: 20px;
+  }
+  .footnote .heart{ color: var(--rose); }
+
+  footer{
+    text-align:center;
+    padding: 30px 20px;
+    border-top: 2px dashed var(--paper-shadow);
+    color: var(--ink-soft);
+    font-family:'Caveat', cursive;
+    font-size: 20px;
+  }
+  footer .signature{
+    font-family:'Long Cang', cursive;
+    color: var(--accent-deep);
+    font-size: 26px;
+    margin-top: 6px;
+  }
+
+  /* ===== 手机端 ===== */
+  @media (max-width: 768px){
+    body{ font-size: 16px; }
+    .nav-inner{ flex-direction: column; gap: 10px; padding: 0 18px;}
+    nav ul{ gap: 16px; justify-content:center; }
+    nav a{ font-size: 20px; }
+    .wrap{ padding: 0 20px; }
+    section{ padding: 60px 0; }
+
+    .hero-grid{ grid-template-columns: 1fr; gap: 40px; }
+    .hero-text{ text-align:center; }
+    .hero-text .tagline{ margin-left:auto; margin-right:auto; }
+    .hero-badges, .cta-row{ justify-content:center; }
+    .hero-text h1{ font-size: 56px; }
+    .hero-text .hello{ font-size: 32px; }
+    .portrait-frame{ width: 240px; height: 240px; }
+
+    .about-grid{ grid-template-columns: 1fr; gap: 36px; }
+    .about-illust{ order: -1; }
+
+    .gallery{ grid-template-columns: 1fr 1fr; gap: 18px; }
+    .work:nth-child(2), .work:nth-child(4){ transform: none; }
+    .work h3{ font-size: 22px; }
+
+    .section-title h2{ font-size: 36px; }
+    .contact .invite{ font-size: 32px; }
+    .contact-link{ font-size: 20px; padding: 10px 20px; }
+  }
+
+  @media (max-width: 480px){
+    .gallery{ grid-template-columns: 1fr; }
+    .hero-text h1{ font-size: 44px; }
+    .section-title h2{ font-size: 30px; }
+    .section-title h2::before, .section-title h2::after{ margin: 0 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部导航 ===== -->
+<header>
+  <div class="nav-inner">
+    <div class="logo">[你的名字]</div>
+    <nav>
+      <ul>
+        <li><a href="#hello">你好</a></li>
+        <li><a href="#about">关于我</a></li>
+        <li><a href="#works">作品集</a></li>
+        <li><a href="#journal">我的日常</a></li>
+        <li><a href="#contact">联系我</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="hello">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hello handwrite">嗨,你好呀 ✿</div>
+        <h1>我是<span class="underline">[你的名字]</span></h1>
+        <p class="tagline">
+          [一句话介绍你自己,比如:一个喜欢做 XX 的人,住在 XX。<br>
+          做<strong>[你最在意的事]</strong>——[补充一句你做的事里的小细节]。
+        </p>
+        <div class="hero-badges">
+          <span class="badge">🌱 [标签 1,比如:做了 X 年]</span>
+          <span class="badge">☕ [标签 2,比如:喜欢 XX]</span>
+          <span class="badge">🐱 [标签 3,比如:养着 XX]</span>
+        </div>
+        <div class="cta-row">
+          <a href="#works" class="btn btn-primary">看看我的作品</a>
+          <a href="#contact" class="btn btn-ghost">写封信给我</a>
+        </div>
+      </div>
+
+      <div class="hero-portrait">
+        <div class="portrait-frame">
+          <div class="img-ph">
+            [IMG: 你的头像或自画像 -<br>一句话描述画面内容与风格,<br>温暖手绘水彩风,<br>圆形构图]
+          </div>
+        </div>
+        <span class="deco deco-1">✿</span>
+        <span class="deco deco-2">🍃</span>
+        <span class="deco deco-3">☕</span>
+        <span class="deco deco-4">❀</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">· · · ❀ · · ·</div>
+
+<!-- ===== 关于我 ===== -->
+<section id="about">
+  <div class="wrap">
+    <div class="section-title">
+      <span class="kicker handwrite">about me</span>
+      <h2>关于我</h2>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-illust">
+        <div class="ph">
+          [IMG: 一幅代表你风格的作品 -<br>一句话描述画面内容,<br>符合你整体氛围,<br>暖色调]
+        </div>
+      </div>
+      <div class="about-text">
+        <p class="lead">[一句你的核心理念,比如:我做的不是 XX,是那些差点被忽略的小事。]</p>
+        <p>
+          [一段介绍你的工作/创作方式:你观察什么、收集什么、什么会成为你的素材——<em>这里强调你的特色</em>。]
+        </p>
+        <p>
+          我用<em>[你的工具或方法]</em>记录它们。不追求[你不在意的事],只想留住[你真正想留住的东西]。
+        </p>
+        <div class="themes">
+          <span class="theme-chip">[主题标签 1]</span>
+          <span class="theme-chip">[主题标签 2]</span>
+          <span class="theme-chip">[主题标签 3]</span>
+          <span class="theme-chip">[主题标签 4]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 作品集 ===== -->
+<section id="works">
+  <div class="wrap">
+    <div class="section-title">
+      <span class="kicker handwrite">my works</span>
+      <h2>作品集</h2>
+    </div>
+
+    <div class="gallery">
+      <div class="work">
+        <div class="thumb">
+          [IMG: 作品 1<br>《[你的作品名]》<br>主视觉]
+        </div>
+        <div class="meta handwrite">[年份] · [材料/形式]</div>
+        <h3>[你的作品名 1]</h3>
+        <p>[一句话描述这个作品]</p>
+      </div>
+
+      <div class="work">
+        <div class="thumb">
+          [IMG: 作品 2<br>《[你的作品名]》]
+        </div>
+        <div class="meta handwrite">[年份] · [材料/形式]</div>
+        <h3>[你的作品名 2]</h3>
+        <p>[一句话描述这个作品]</p>
+      </div>
+
+      <div class="work">
+        <div class="thumb">
+          [IMG: 作品 3<br>《[你的作品名]》]
+        </div>
+        <div class="meta handwrite">[年份] · [材料/形式]</div>
+        <h3>[你的作品名 3]</h3>
+        <p>[一句话描述这个作品]</p>
+      </div>
+
+      <div class="work">
+        <div class="thumb">
+          [IMG: 作品 4<br>《[你的作品名]》]
+        </div>
+        <div class="meta handwrite">[年份] · [材料/形式]</div>
+        <h3>[你的作品名 4]</h3>
+        <p>[一句话描述这个作品]</p>
+      </div>
+
+      <div class="work">
+        <div class="thumb">
+          [IMG: 作品 5<br>《[你的作品名]》]
+        </div>
+        <div class="meta handwrite">[年份] · [材料/形式]</div>
+        <h3>[你的作品名 5]</h3>
+        <p>[一句话描述这个作品]</p>
+      </div>
+
+      <div class="work">
+        <div class="thumb">
+          [IMG: 作品 6<br>《[你的作品名]》]
+        </div>
+        <div class="meta handwrite">[年份] · [材料/形式]</div>
+        <h3>[你的作品名 6]</h3>
+        <p>[一句话描述这个作品]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 我的日常(时间轴) ===== -->
+<section id="journal" class="journal">
+  <div class="wrap">
+    <div class="section-title">
+      <span class="kicker handwrite">my days</span>
+      <h2>我的日常</h2>
+    </div>
+
+    <div class="timeline">
+      <div class="entry">
+        <div class="date handwrite">[时间段,如:这个月]</div>
+        <h4>[最近在做的一件事]</h4>
+        <p>[一句话描述这件事的细节,带点生活感。]</p>
+      </div>
+
+      <div class="entry">
+        <div class="date handwrite">[时间段,如:上个月]</div>
+        <h4>[另一个近期的小事]</h4>
+        <p>[一句话描述这件小事发生了什么。]</p>
+      </div>
+
+      <div class="entry">
+        <div class="date handwrite">[时间段,如:今年]</div>
+        <h4>[一个里程碑事件]</h4>
+        <p>[一句话描述这个里程碑,可以加点数字。]</p>
+      </div>
+
+      <div class="entry">
+        <div class="date handwrite">[时间段,如:一直]</div>
+        <h4>[一个长期坚持的小习惯]</h4>
+        <p>[一句话描述你长期都在做的事。]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 联系我 ===== -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="section-title">
+      <span class="kicker handwrite">say hi</span>
+      <h2>写信给我</h2>
+    </div>
+
+    <p class="invite">[一句邀请的话,比如:想聊聊天,或想合作?]</p>
+    <p class="sub">[一句补充,比如:随时都可以。我回信可能慢一点,但一定会回。]</p>
+
+    <div class="contact-links">
+      <a href="mailto:[你的邮箱]" class="contact-link">
+        <span class="ico">✉️</span> [你的邮箱]
+      </a>
+      <a href="#" class="contact-link">
+        <span class="ico">📷</span> [你的社交账号 1,如:小红书 @你的账号]
+      </a>
+      <a href="#" class="contact-link">
+        <span class="ico">🐦</span> [你的社交账号 2,如:微博 @你的账号]
+      </a>
+    </div>
+
+    <p class="footnote">
+      [一句温柔的结尾话,比如:如果你今天过得不太好,希望这里的某个东西,能让你<span class="heart">❀</span>一下笑出来。]
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div>© [年份] [你的名字] · [一句话签名,如:一切都是手做的]</div>
+  <div class="signature">— [你的名字]</div>
+</footer>
+
+</body>
+</html>

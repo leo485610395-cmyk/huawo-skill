@@ -1,0 +1,901 @@
+<!--
+============================================================
+水墨安静风 · 个人介绍站模板
+============================================================
+
+【使用方法】
+1. 用记事本/VS Code/任何文本编辑器打开这个文件
+2. 按 Ctrl+H(或 Cmd+H)打开查找替换
+3. 把下面这些占位符替换成你自己的内容:
+
+   [你的名字]              → 你的名字或 ID
+   [一句话介绍你自己]      → 比如「一个在大学做 OPC 的人」
+   [你的板块内容]          → 你想放的板块(关于我/在做的事/作品/联系)
+   [你的邮箱]              → 你的联系邮箱
+   [你的社交账号]          → 你的 Twitter/GitHub/小红书 等
+
+4. 替换完保存,双击文件用浏览器打开看效果
+5. 把图片占位 [IMG: xxx] 换成你自己的图片(放到同目录,改 src 路径)
+
+【风格说明】
+水墨安静风 = 中国水墨 + 书法 + 印章 + 留白
+适合:喜欢东方美学、传统文化、有记忆点的个人站
+
+【不要改的部分】
+- 不要改 <style> 标签里的 CSS(会破坏视觉效果)
+- 不要改板块数量和顺序(会破坏布局)
+- 如果要调颜色,只改 :root 里的颜色变量
+
+【作者】化我(huawo.netlify.app)
+============================================================
+-->
+<!DOCTYPE html>
+<!--
+============================================================
+模板测试 · 水墨安静风 · 个人介绍站 · v2(细节加强版)
+读者画像:喜欢传统文化的设计师/写作者(示例人设,替换时请忽略)
+主对标:https://ma5a.com (按模板作者自用对标,描述为:个人介绍站、安静气质、盯着不腻)
+
+============================================================
+【v2 相对 v1 融入了 3 个细节元素】
+所有元素都是「水墨安静风该有的」,纯 CSS 实现,不动结构、不加动效、不加图片。
+
+------------------------------------------------------------
+元素 1:竖排标题编号(writing-mode: vertical-rl)
+  - 来自哪:W3C《Styling vertical Chinese/Japanese/Korean text》
+           (https://www.w3.org/International/articles/vertical-text/)
+           MDN writing-mode 词条、Chen Hui Jing《Vertical typesetting》
+           —— 中日韩书法/卷轴网页的共识性技法
+  - v1 有没:没有(v1 用水平「壹 / I」)
+  - 怎么改:.section-num 改成 writing-mode: vertical-rl + text-orientation:upright,
+           像卷轴画右侧的边款,把罗马数字挪到 <small> 副标里
+  - 纪律自检:竖排是水墨/书法网页的本职语言,不是极简风/温暖手作风的元素,
+           不算风格混乱;无 JS、无动画、只是文字方向,不算炫技
+
+元素 2:淡墨笔触分隔线(取代 1px 实线)
+  - 来自哪:博客园《虚与实的和谐——论网页设计留白》、Mailchimp《White Space》、
+           OneUpWeb(明确写「留白源自中国水墨画与日本艺术」)、
+           水墨画「计白当黑 / 笔断意连」常识
+  - v1 有没:没有(v1 .section-head 用 border-top:1px solid)
+  - 怎么改:.section-head::before 用 linear-gradient 画一条左浓右淡、最终 fade-out 的
+           细线,::after 在起笔处加一颗椭圆小墨点,模仿毛笔起笔按下、收笔提走的笔触
+  - 纪律自检:依然是「一条分隔线」,只把生硬的 CSS 实线换成有浓淡的墨痕,
+           符合水墨核心的「虚实」,不算风格混乱;纯静态渐变,无动效,不算炫技
+
+元素 3:印章做旧(朱砂印章的拓印质感)
+  - 来自哪:八目妖《东方美学》、CSDN《云容笔谈:题跋+人像+印章一体化卷轴》、
+           书法作品常识——真印章拓印永远不匀,边缘有浓淡缺损
+  - v1 有没:有一块朱砂印章,但只是纯色方块(平)
+  - 怎么改:.seal 叠加多层 inset box-shadow:右下浓、左上淡、中间微透,
+           模拟盖印用力不均的拓印感。不动位置、不动颜色、不增加第二块印章
+  - 纪律自检:依然是「一块朱砂印章」这个水墨核心符号,只是让它更像真印章,
+           没引入其他风格的元素;零动效,不算炫技
+
+------------------------------------------------============
+v2 review 自检(写完后回头看的结论):
+  - 这三个元素让水墨气质「更浓」而不是「更杂」:
+    竖排是书法本职、淡墨线是水墨本职、做旧印章是拓印本职。
+  - 没有动效、没有 3D、没有花哨交互,结构板块数与内容与 v1 完全一致。
+  - 没有把极简风、温暖手作风的元素(如柔和阴影、手写曲线、暖色)混进来。
+============================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[你的名字] · [一句话介绍你自己]</title>
+
+<!-- 字体:Ma Shan Zheng(书法体) + Noto Serif SC(正文宋体)
+     按「坑 1」:不让 AI 画汉字笔画,直接用现成书法字体 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   配色 —— 按模板 prompt 「配色方案(背景色、文字色、强调色,用十六进制色值)」
+   主对标 ma5a.com 我访问不到(搜索引擎搜不到内容),所以这部分是
+   「AI 自己加戏」:按水墨风常识配色 —— 宣纸米白底 + 浓淡墨色 + 一点朱砂红做印章
+   ============================================================ */
+:root{
+  --paper:        #f4efe6;  /* 宣纸米白 */
+  --paper-deep:   #ebe4d6;  /* 旧宣纸暗一档 */
+  --ink:          #1a1814;  /* 浓墨 */
+  --ink-mid:      #4a453c;  /* 中墨 */
+  --ink-light:    #8a8278;  /* 淡墨 */
+  --ink-ghost:    #c9c0b0;  /* 极淡墨,用于辅助线 */
+  --cinnabar:     #9c2a1c;  /* 朱砂红,只用在印章 */
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  font-family:'Noto Serif SC', 'Songti SC', serif;
+  background-color:var(--paper);
+  color:var(--ink);
+  line-height:1.9;
+  font-weight:300;
+  /* 宣纸纹理:用径向渐变叠出微微的颗粒感(纯 CSS,无图片)
+     —— 「AI 自己加戏」,模板没要求,但能让米白底更有质感 */
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(0,0,0,0.015) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(0,0,0,0.02) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(156,42,28,0.008) 0%, transparent 70%);
+}
+
+/* —— 顶部细线导航(按「有什么特别的视觉元素:细线分割」) —— */
+.nav{
+  position:fixed;
+  top:0; left:0; right:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1.6rem 4rem;
+  z-index:100;
+  /* 底部一条极淡的细线 */
+  border-bottom:1px solid var(--ink-ghost);
+  background:rgba(244,239,230,0.85);
+  backdrop-filter:blur(8px);
+}
+.nav-brand{
+  font-family:'Ma Shan Zheng', serif;
+  font-size:1.6rem;
+  letter-spacing:0.1em;
+  color:var(--ink);
+}
+.nav-links{
+  display:flex;
+  gap:2.5rem;
+  list-style:none;
+}
+.nav-links a{
+  text-decoration:none;
+  color:var(--ink-mid);
+  font-size:0.95rem;
+  letter-spacing:0.2em;
+  position:relative;
+  transition:color .3s ease;
+}
+.nav-links a:hover{ color:var(--ink); }
+.nav-links a::after{
+  content:'';
+  position:absolute;
+  left:50%; bottom:-6px;
+  width:0; height:1px;
+  background:var(--ink);
+  transition:all .3s ease;
+}
+.nav-links a:hover::after{
+  width:100%;
+  left:0;
+}
+
+/* ============================================================
+   HERO —— 首屏
+   「AI 自己加戏」:用纯 CSS 画了一笔水墨晕染背景
+   (模板没要求做晕染,只说「特别视觉元素」,这一步是 AI 主观发挥)
+   ============================================================ */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  padding:8rem 2rem 4rem;
+}
+
+/* 水墨晕染背景圆 —— 用 box-shadow 内外多层做晕开效果 */
+.ink-blob{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  filter:blur(40px);
+  opacity:0.35;
+}
+.ink-blob.b1{
+  width:480px; height:480px;
+  top:-120px; right:-80px;
+  background:radial-gradient(circle, var(--ink) 0%, transparent 65%);
+  opacity:0.18;
+}
+.ink-blob.b2{
+  width:360px; height:360px;
+  bottom:-100px; left:-100px;
+  background:radial-gradient(circle, var(--ink-mid) 0%, transparent 70%);
+  opacity:0.22;
+}
+.ink-blob.b3{
+  width:200px; height:200px;
+  top:40%; left:60%;
+  background:radial-gradient(circle, var(--cinnabar) 0%, transparent 70%);
+  opacity:0.05;
+}
+
+/* 印章(只一块,按「特别视觉元素:符号」)
+   「AI 自己加戏」:用 CSS 方框 + 篆体字做了个红色印章,
+   而不是只用占位符框,因为模板说「红色印章」是水墨风核心符号
+   ============================================================
+   【v2 · 元素 3】印章做旧:叠多层 inset box-shadow
+   模拟真印章拓印时用力不均——右下浓、左上淡、中间微透,
+   让印章不再是一块平涂的红色,而是有「盖出来」的质感。
+   颜色、位置、大小、角度、数量都没变,只是更立体了一点。
+   ============================================================ */
+.seal{
+  position:absolute;
+  top:30%;
+  right:18%;
+  width:64px; height:64px;
+  background:var(--cinnabar);
+  color:#f4efe6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Ma Shan Zheng', serif;
+  font-size:1.4rem;
+  letter-spacing:0;
+  line-height:1;
+  transform:rotate(-6deg);
+  /* v2:把原来单一的两层 shadow 换成多层拓印质感 */
+  box-shadow:
+    /* 印面外圈一圈微亮的印油堆积 */
+    inset 0 0 0 2px rgba(244,239,230,0.32),
+    /* 右下角用力最重——拓印常识:盖印的人通常右下先按下去 */
+    inset -3px -3px 0 0 rgba(140,30,20,0.95),
+    inset 3px 3px 0 0 rgba(140,30,20,0.30),
+    /* 左上角最淡——没盖实,透出一点纸色 */
+    inset 4px 4px 6px rgba(244,239,230,0.18),
+    /* 印面整体微微发暗,像旧朱砂 */
+    inset 0 0 14px rgba(90,18,12,0.35),
+    /* 印章外侧的边界 + 极轻投影 */
+    0 0 0 1px var(--cinnabar),
+    0 1px 2px rgba(0,0,0,0.06);
+  /* 印章做旧效果:稍微的不规则边缘 */
+  border-radius:2px;
+}
+.seal span{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:2px;
+  font-size:1.1rem;
+  text-align:center;
+  /* v2:印面字也微微透出拓印不均 */
+  text-shadow:0 0 1px rgba(244,239,230,0.25);
+}
+
+.hero-title{
+  font-family:'Ma Shan Zheng', serif;
+  font-size:9rem;
+  line-height:1;
+  color:var(--ink);
+  letter-spacing:0.3em;
+  margin-left:0.3em; /* 抵消最后一个字的 letter-spacing */
+  position:relative;
+  z-index:2;
+  /* 慢慢淡入 */
+  animation:fadeUp 1.6s ease-out both;
+}
+
+.hero-sub{
+  font-family:'Cormorant Garamond', serif;
+  font-style:italic;
+  font-size:1.5rem;
+  color:var(--ink-mid);
+  letter-spacing:0.15em;
+  margin-top:2rem;
+  z-index:2;
+  animation:fadeUp 1.6s ease-out .3s both;
+}
+
+.hero-tag{
+  margin-top:1rem;
+  font-size:1rem;
+  color:var(--ink-light);
+  letter-spacing:0.4em;
+  z-index:2;
+  animation:fadeUp 1.6s ease-out .6s both;
+}
+
+/* 一条向下的小提示 */
+.scroll-hint{
+  position:absolute;
+  bottom:3rem;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:0.8rem;
+  color:var(--ink-light);
+  letter-spacing:0.5em;
+  z-index:2;
+  animation:fadeUp 1.6s ease-out .9s both, bounce 2.5s ease-in-out 2s infinite;
+}
+.scroll-hint::after{
+  content:'';
+  display:block;
+  width:1px; height:40px;
+  background:var(--ink-light);
+  margin:1rem auto 0;
+}
+
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(20px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+@keyframes bounce{
+  0%,100%{ transform:translateX(-50%) translateY(0); }
+  50%    { transform:translateX(-50%) translateY(8px); }
+}
+
+/* ============================================================
+   通用板块结构
+   模板要求:「页面结构(有几个板块?每个板块放什么?怎么布局?)」
+   —— 这是必填项,所以板块划分是「按模板 prompt 生成」
+   ============================================================ */
+.section{
+  max-width:960px;
+  margin:0 auto;
+  padding:8rem 2rem;
+  position:relative;
+}
+
+/* 每个板块的小标题:卷轴题跋式编号 + 标题
+   ============================================================
+   【v2 · 元素 2】淡墨笔触分隔线
+   把原来 .section-head 上生硬的 border-top:1px solid 去掉,
+   换成 ::before 一条左浓右淡、末端完全 fade-out 的墨痕,
+   ::after 在起笔处加一颗椭圆小墨点——
+   模仿毛笔「起笔按下、行笔渐淡、收笔提走」的真实笔触。
+   ============================================================
+   【v2 · 元素 1】section-num 改竖排
+   (见下方 .section-num 注释)
+   ============================================================ */
+.section-head{
+  display:flex;
+  align-items:flex-start;
+  gap:2rem;
+  margin-bottom:4rem;
+  /* v2:去掉原来的 border-top:1px solid var(--ink-ghost); */
+  padding-top:3rem;
+  position:relative;
+}
+/* 淡墨笔触分隔线:左浓右淡,末端 fade out(笔断意连) */
+.section-head::before{
+  content:'';
+  position:absolute;
+  top:0; left:0;
+  width:55%; height:1px;
+  background:linear-gradient(90deg,
+    var(--ink) 0%,
+    var(--ink-mid) 30%,
+    var(--ink-ghost) 65%,
+    transparent 100%);
+  opacity:0.55;
+  pointer-events:none;
+}
+/* 起笔处一颗椭圆小墨点:毛笔刚按下去那一瞬 */
+.section-head::after{
+  content:'';
+  position:absolute;
+  top:-1px; left:0;
+  width:9px; height:4px;
+  background:var(--ink);
+  border-radius:50% 60% 45% 55% / 60% 50% 50% 40%;
+  opacity:0.7;
+  filter:blur(0.4px);
+  pointer-events:none;
+}
+
+/* v2 · 元素 1:section-num 改成竖排,像卷轴画右侧的边款
+   用 writing-mode: vertical-rl + text-orientation:upright,
+   让「壹/贰/叁」竖着排,罗马数字挪到 <small> 里 */
+.section-num{
+  font-family:'Ma Shan Zheng', serif;     /* v1 是 Cormorant 斜体,v2 改书法体配竖排 */
+  font-size:1.5rem;
+  color:var(--ink-mid);
+  letter-spacing:0.25em;
+  writing-mode:vertical-rl;               /* 从右往左竖排 */
+  text-orientation:upright;               /* 每个字正立 */
+  white-space:nowrap;
+  padding-top:0.4rem;
+  opacity:0.85;                           /* 边款比正文淡一点 */
+}
+.section-title{
+  font-family:'Ma Shan Zheng', serif;
+  font-size:2.6rem;
+  color:var(--ink);
+  letter-spacing:0.15em;
+  line-height:1.2;
+}
+.section-title small{
+  display:block;
+  font-family:'Cormorant Garamond', serif;
+  font-style:italic;
+  font-size:0.95rem;
+  color:var(--ink-light);
+  letter-spacing:0.2em;
+  margin-top:0.5rem;
+  font-weight:300;
+}
+
+/* ============================================================
+   关于我 —— 文字段落 + 一张人物水墨占位图
+   ============================================================ */
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1.4fr;
+  gap:5rem;
+  align-items:center;
+}
+.about-img{
+  /* 用 ASCII 框占位,模板要求「图片位置用 ASCII 符号框代替」 */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:380px;
+  background:
+    linear-gradient(135deg, rgba(26,24,20,0.04) 0%, transparent 60%),
+    var(--paper-deep);
+  border:1px solid var(--ink-ghost);
+  font-family:monospace;
+  font-size:0.85rem;
+  color:var(--ink-light);
+  text-align:center;
+  padding:2rem;
+  line-height:2;
+  position:relative;
+}
+.about-img::before{
+  /* 装饰:左上角一道墨痕 */
+  content:'';
+  position:absolute;
+  top:0; left:0;
+  width:60%; height:4px;
+  background:linear-gradient(90deg, var(--ink) 0%, transparent 100%);
+  opacity:0.6;
+}
+.about-text p{
+  font-size:1.15rem;
+  color:var(--ink-mid);
+  margin-bottom:1.5rem;
+  text-indent:2em;
+}
+.about-text p:first-child::first-letter{
+  font-family:'Ma Shan Zheng', serif;
+  font-size:3rem;
+  float:left;
+  line-height:1;
+  margin-right:0.5rem;
+  margin-top:0.3rem;
+  color:var(--ink);
+}
+.about-signature{
+  margin-top:2.5rem;
+  font-family:'Ma Shan Zheng', serif;
+  font-size:1.8rem;
+  color:var(--ink);
+  display:inline-block;
+  border-bottom:1px solid var(--ink-light);
+  padding-bottom:0.5rem;
+}
+
+/* ============================================================
+   我在做的事 —— 三件正在做的事,卡片式
+   ============================================================ */
+.doing-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:3rem;
+  margin-top:2rem;
+}
+.doing-card{
+  padding:2.5rem 2rem;
+  background:rgba(255,255,255,0.3);
+  border-top:2px solid var(--ink);
+  position:relative;
+  transition:transform .4s ease, background .4s ease;
+}
+.doing-card:hover{
+  transform:translateY(-6px);
+  background:rgba(255,255,255,0.5);
+}
+.doing-card-num{
+  font-family:'Cormorant Garamond', serif;
+  font-style:italic;
+  color:var(--ink-light);
+  font-size:0.9rem;
+  letter-spacing:0.2em;
+  margin-bottom:1.5rem;
+}
+.doing-card h3{
+  font-family:'Ma Shan Zheng', serif;
+  font-size:1.8rem;
+  color:var(--ink);
+  letter-spacing:0.1em;
+  margin-bottom:1rem;
+  font-weight:400;
+}
+.doing-card p{
+  color:var(--ink-mid);
+  font-size:1rem;
+  line-height:1.9;
+}
+
+/* ============================================================
+   作品 —— 三幅水墨作品占位
+   ============================================================ */
+.works-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:2rem;
+  margin-top:2rem;
+}
+.work-item{
+  display:flex;
+  flex-direction:column;
+  cursor:pointer;
+}
+.work-img{
+  aspect-ratio:3/4;
+  background:
+    linear-gradient(135deg, rgba(26,24,20,0.06) 0%, transparent 50%),
+    linear-gradient(225deg, rgba(26,24,20,0.03) 0%, transparent 50%),
+    var(--paper-deep);
+  border:1px solid var(--ink-ghost);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:monospace;
+  font-size:0.78rem;
+  color:var(--ink-light);
+  text-align:center;
+  padding:1.5rem;
+  line-height:1.8;
+  transition:all .5s ease;
+  position:relative;
+  overflow:hidden;
+}
+.work-item:hover .work-img{
+  border-color:var(--ink);
+  transform:scale(1.02);
+}
+.work-img::after{
+  /* 一道斜着的淡墨痕,装饰 */
+  content:'';
+  position:absolute;
+  width:140%; height:30px;
+  background:linear-gradient(90deg, transparent 0%, rgba(26,24,20,0.08) 50%, transparent 100%);
+  top:30%; left:-20%;
+  transform:rotate(-12deg);
+}
+.work-caption{
+  margin-top:1rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  padding-bottom:0.8rem;
+  border-bottom:1px solid var(--ink-ghost);
+}
+.work-caption h4{
+  font-family:'Ma Shan Zheng', serif;
+  font-size:1.3rem;
+  color:var(--ink);
+  letter-spacing:0.1em;
+  font-weight:400;
+}
+.work-caption span{
+  font-family:'Cormorant Garamond', serif;
+  font-style:italic;
+  color:var(--ink-light);
+  font-size:0.9rem;
+}
+
+/* ============================================================
+   联系 —— 文字为主,一句留白
+   ============================================================ */
+.contact{
+  text-align:center;
+  padding:10rem 2rem;
+}
+.contact-line{
+  font-family:'Ma Shan Zheng', serif;
+  font-size:2.4rem;
+  color:var(--ink);
+  letter-spacing:0.2em;
+  line-height:1.6;
+  margin-bottom:1rem;
+}
+.contact-sub{
+  font-family:'Cormorant Garamond', serif;
+  font-style:italic;
+  color:var(--ink-light);
+  font-size:1.1rem;
+  letter-spacing:0.2em;
+  margin-bottom:3.5rem;
+}
+.contact-links{
+  display:flex;
+  justify-content:center;
+  gap:3rem;
+  flex-wrap:wrap;
+}
+.contact-links a{
+  color:var(--ink-mid);
+  text-decoration:none;
+  font-size:1rem;
+  letter-spacing:0.15em;
+  padding-bottom:0.4rem;
+  border-bottom:1px solid var(--ink-ghost);
+  transition:all .3s ease;
+}
+.contact-links a:hover{
+  color:var(--ink);
+  border-bottom:1px solid var(--ink);
+}
+
+/* —— 页脚 —— */
+footer{
+  text-align:center;
+  padding:3rem 2rem;
+  border-top:1px solid var(--ink-ghost);
+  color:var(--ink-light);
+  font-size:0.85rem;
+  letter-spacing:0.2em;
+}
+footer .foot-seal{
+  display:inline-block;
+  width:36px; height:36px;
+  background:var(--cinnabar);
+  color:#f4efe6;
+  font-family:'Ma Shan Zheng', serif;
+  font-size:0.9rem;
+  line-height:36px;
+  margin-bottom:1rem;
+  transform:rotate(-4deg);
+  border-radius:2px;
+  /* v2:页脚小印章也跟着做旧一点,跟首屏大印章呼应 */
+  box-shadow:
+    inset 0 0 0 1px rgba(244,239,230,0.3),
+    inset -2px -2px 0 0 rgba(140,30,20,0.85),
+    inset 2px 2px 0 0 rgba(140,30,20,0.30),
+    inset 0 0 8px rgba(90,18,12,0.35);
+}
+
+/* ============================================================
+   手机端 —— 按「坑 3」中文字号不能照搬、按场景 3 要求
+   「AI 自己加戏」:模板场景 3 是「读者发现问题后再去问 AI」,
+   但 AI 第一版主动把手机端做了基础适配,免得读者打开就崩
+   ============================================================ */
+@media (max-width: 768px){
+  .nav{
+    padding:1rem 1.5rem;
+  }
+  .nav-brand{ font-size:1.3rem; }
+  .nav-links{
+    gap:1.2rem;
+  }
+  .nav-links a{ font-size:0.8rem; letter-spacing:0.1em; }
+
+  .hero-title{
+    font-size:4.5rem;
+    letter-spacing:0.2em;
+  }
+  .hero-sub{ font-size:1.1rem; }
+  .hero-tag{ font-size:0.85rem; letter-spacing:0.25em; }
+
+  /* 印章和晕染在手机上位置调一下,免得盖住字 */
+  .seal{
+    top:auto; bottom:20%;
+    right:10%;
+    width:48px; height:48px;
+  }
+  .seal span{ font-size:0.85rem; }
+  .ink-blob.b1{ width:300px; height:300px; }
+  .ink-blob.b2{ width:240px; height:240px; }
+
+  .section{
+    padding:5rem 1.5rem;
+  }
+  .section-head{
+    gap:1rem;
+    padding-top:2rem;
+    margin-bottom:2.5rem;
+  }
+  /* v2:竖排编号在手机上稍微收一点 */
+  .section-num{ font-size:1.2rem; letter-spacing:0.15em; }
+  .section-title{ font-size:2rem; }
+
+  .about-grid{
+    grid-template-columns:1fr;
+    gap:2.5rem;
+  }
+  .about-img{ min-height:280px; }
+  .about-text p{ font-size:1.05rem; }
+
+  .doing-grid{
+    grid-template-columns:1fr;
+    gap:1.5rem;
+  }
+  .doing-card{ padding:2rem 1.5rem; }
+
+  .works-grid{
+    grid-template-columns:1fr 1fr;
+    gap:1rem;
+  }
+  .work-caption h4{ font-size:1.1rem; }
+  .work-caption span{ font-size:0.8rem; }
+
+  .contact-line{ font-size:1.6rem; letter-spacing:0.1em; }
+  .contact-links{ gap:1.5rem; }
+  .contact-links a{ font-size:0.9rem; }
+}
+
+@media (max-width: 480px){
+  .hero-title{ font-size:3.5rem; }
+  .works-grid{ grid-template-columns:1fr; }
+  .nav-links{ gap:0.9rem; }
+  .nav-links a{ font-size:0.72rem; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ============== 顶部导航(按模板「页面结构」要求生成) ============== -->
+<nav class="nav">
+  <div class="nav-brand">[你的名字]</div>
+  <ul class="nav-links">
+    <li><a href="#about">关于</a></li>
+    <li><a href="#doing">在做</a></li>
+    <li><a href="#works">作品</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- ============== HERO 首屏 ============== -->
+<header class="hero">
+  <!-- 三个水墨晕染背景(纯 CSS) -->
+  <div class="ink-blob b1"></div>
+  <div class="ink-blob b2"></div>
+  <div class="ink-blob b3"></div>
+
+  <!-- 红色印章 —— 模板 prompt 明确要求的「红色印章」视觉锚点
+       v2:同一块印章,加了拓印做旧的多层 inset shadow -->
+  <div class="seal"><span>[名<br>字]</span></div>
+
+  <!-- 大字「林墨」:书法字体 Ma Shan Zheng
+       按「坑 1」:不让 AI 画汉字,直接用现成书法字体 -->
+  <h1 class="hero-title">[你的名字]</h1>
+
+  <p class="hero-sub">[Your one-line intro in English]</p>
+  <p class="hero-tag">[一句话介绍你自己]</p>
+
+  <div class="scroll-hint">SCROLL</div>
+</header>
+
+<!-- ============== 关于我 ============== -->
+<section class="section" id="about">
+  <div class="section-head">
+    <!-- v2:section-num 改竖排,只留中文数字,罗马数字挪到副标 -->
+    <div class="section-num">壹</div>
+    <div class="section-title">
+      关于我
+      <small>I · About</small>
+    </div>
+  </div>
+
+  <div class="about-grid">
+    <!-- ASCII 占位图,按模板要求「图片位置用 ASCII 符号框代替」 -->
+    <div class="about-img">
+      [IMG: 你的头像或代表形象<br>
+       约 380px × 380px<br>
+       淡墨写意,留白多一些]
+    </div>
+    <div class="about-text">
+      <!-- 自我介绍:替换成你自己的真实内容,建议 2-3 段 -->
+      <p>我叫[你的名字],[在这里继续写:你在哪生活、做什么、一个让你开始这件事的契机]</p>
+      <p>[第二段:你白天/晚上在做什么,或你相信什么、你的方法]</p>
+      <p>[第三段:这个网站对你意味着什么,或一句对读者说的话]</p>
+      <div class="about-signature">—— [你的名字]</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 我在做的事 ============== -->
+<section class="section" id="doing">
+  <div class="section-head">
+    <div class="section-num">贰</div>
+    <div class="section-title">
+      我在做的事
+      <small>II · What I'm doing</small>
+    </div>
+  </div>
+
+  <div class="doing-grid">
+    <!-- 三个卡片,内容是 AI 按人设写的,读者要替换 -->
+    <div class="doing-card">
+      <div class="doing-card-num">壹</div>
+      <h3>[板块 1 标题]</h3>
+      <p>[板块 1 的一句话描述:你在做的事、为什么做]</p>
+    </div>
+    <div class="doing-card">
+      <div class="doing-card-num">贰</div>
+      <h3>[板块 2 标题]</h3>
+      <p>[板块 2 的一句话描述]</p>
+    </div>
+    <div class="doing-card">
+      <div class="doing-card-num">叁</div>
+      <h3>[板块 3 标题]</h3>
+      <p>[板块 3 的一句话描述]</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 作品 ============== -->
+<section class="section" id="works">
+  <div class="section-head">
+    <div class="section-num">叁</div>
+    <div class="section-title">
+      几张作品
+      <small>III · Selected works</small>
+    </div>
+  </div>
+
+  <div class="works-grid">
+    <div class="work-item">
+      <div class="work-img">
+        [IMG: 作品 1 图片<br>
+         300×400px<br>
+         立轴构图]
+      </div>
+      <div class="work-caption">
+        <h4>[作品 1 名称]</h4>
+        <span>[年份]</span>
+      </div>
+    </div>
+    <div class="work-item">
+      <div class="work-img">
+        [IMG: 作品 2 图片<br>
+         300×400px<br>
+         横向留白]
+      </div>
+      <div class="work-caption">
+        <h4>[作品 2 名称]</h4>
+        <span>[年份]</span>
+      </div>
+    </div>
+    <div class="work-item">
+      <div class="work-img">
+        [IMG: 作品 3 图片<br>
+         300×400px<br>
+         朱印落款]
+      </div>
+      <div class="work-caption">
+        <h4>[作品 3 名称]</h4>
+        <span>[年份]</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 联系 ============== -->
+<section class="section contact" id="contact">
+  <p class="contact-sub">If you'd like to write a letter,</p>
+  <p class="contact-line">想写一封信,<br>就用墨。</p>
+
+  <div class="contact-links">
+    <a href="mailto:[你的邮箱]">邮箱 · [你的邮箱]</a>
+    <a href="#">[社交平台 1 · 你的账号]</a>
+    <a href="#">[社交平台 2 · 你的账号]</a>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-seal">[名]</div>
+  <br>
+  © 2026 [你的名字] · 此站点慢工出细活
+</footer>
+
+</body>
+</html>
