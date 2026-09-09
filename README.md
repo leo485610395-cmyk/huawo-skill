@@ -28,6 +28,7 @@ npx -y skills add leo485610395-cmyk/huawo-skill -g --all
 ```
 用 huawo-fear-check 看看这段话：【粘贴你卡住的那段话】
 用 huawo-goal-check 看看：我该不该学X / 想学但执行不了 / 学了用不上
+用 huawo-private-to-public-check 检查：这份私下材料能不能发出去【粘贴材料】
 ```
 
 ## 当前收录
@@ -36,6 +37,7 @@ npx -y skills add leo485610395-cmyk/huawo-skill -g --all
 |---|---|---|---|
 | [huawo-fear-check](skills/huawo-fear-check/) | 「怕就输了」诊断器：问攻略、问时机之前，先分清你缺的是办法还是敢。大学生场景（导员、朋友圈、学长学姐、班级） | v0.7.1 | 五轮全绿：回放 4/4、压力 3/3、真人咨询回填 14 条判定全对、独立盲测 5/5、名人评审团攻击测试 5 题无打穿 |
 | [huawo-goal-check](skills/huawo-goal-check/) | 「先想拿来干什么」诊断器：该不该学X、想学执行不了、学了用不上、A还是B怎么选——先查你知不知道拿它干什么。跟 fear-check 一对：答不上来归这边的病 | v0.1 | 五层全绿：回放 5/5、盲测 6/6、名人评审团（洛克/弗兰克尔/瑞安/阿德勒/西蒙）、原测交叉 6/6、盲测复验 6/6；运行期实战回填已开始 |
+| [huawo-private-to-public-check](skills/huawo-private-to-public-check/) | 私转公审查器：私下笔记、手册、聊天整理转公开发布前，核事实出处、规则版本、身份权限、隐私与脱离语境风险，输出可追溯审查报告。默认只审不改稿 | v0.1 候选 | 真实任务 n=1（新生避坑手册审查）+ 独立盲测 6/6（合成短样例，无答案钥匙）；自评等级 1，候选试用级 |
 | [huawo-website-skill](skills/huawo-website-skill/) | 帮用户做个人介绍网站，对话收集信息自动填进 HTML 模板 | ✅ 已开源 | 已上线 huawo.netlify.app |
 
 ## huawo-fear-check 的理论背景
@@ -73,6 +75,8 @@ npx -y skills add leo485610395-cmyk/huawo-skill -g --all
     │   └── SKILL.md               # 怕就输了诊断器 v0.7.1
     ├── huawo-goal-check/
     │   └── SKILL.md               # 先想拿来干什么诊断器 v0.1
+    ├── huawo-private-to-public-check/
+    │   └── SKILL.md               # 私转公审查器 v0.1（含 references 与盲测记录）
     └── huawo-website-skill/       # 个人网站 skill（含模板、检查表、部署指南）
 ```
 
