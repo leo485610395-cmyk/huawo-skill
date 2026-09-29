@@ -15,9 +15,33 @@
 1. **进合集的 skill 必须经过 skill 候选池验证**（原创 + 能干活 + 跑过 n=1）
 4. **skill 就是工具**。
 
-## 安装（照 dbskill 那套）
+## 新人先做一件事
 
-仓库推上 GitHub 后，把这条命令发给任何能执行本机命令的 Agent（Claude Code / Codex / TRAE 等）：
+最推荐用 WorkBuddy 做一个个人介绍网站。先从 [WorkBuddy 官网](https://www.workbuddy.cn/) 下载并登录，把下面这段发给它；已有能用的工具也可以直接开始，不必重复安装软件。
+
+```text
+请先检查当前环境，安装 huawo-website-skill：
+npx -y skills add leo485610395-cmyk/huawo-skill -g --skill huawo-website-skill
+需要另装软件、付费或新增授权时先说明并等我确认。确认能实际读取 SKILL.md、模板和配套资料后，使用 huawo-website-skill 带我做个人介绍网站。先了解用途，一次带一步，确认真实信息后再制作。
+做完带我打开检查；我确认可展示内容和公开范围后，再帮我生成并检查分享链接。没有对应能力就说明，不编链接。
+```
+
+初版检查后，可以自愿把脱敏截图或真实可访问链接分享到群里；不上线也能先用截图交流。不是必须完成网站才能使用其他工具。
+
+也可以先学懂一个知识点/练习做题（huawo-study-coach）、做 PPT 或填表格（huawo-ai-doudi）。PPT 先讨论大纲、确认后再做页面；表格先确认资料和字段、试填几行。后两项没有本合集专用 Skill，按当前宿主实际能力推进。
+
+按需安装对应的一项；已经能实际读取则跳过安装：
+
+```text
+npx -y skills add leo485610395-cmyk/huawo-skill -g --skill huawo-study-coach
+npx -y skills add leo485610395-cmyk/huawo-skill -g --skill huawo-ai-doudi
+```
+
+六项名称保持原英文名。每项主指令开头都说明功能和新人第一步；展示与默认调用名一致。
+
+## 安装（整个合集）
+
+需要整个合集时，把这条命令发给能执行本机命令的 Agent（WorkBuddy / Codex / Claude Code 等），安装后核对实际读取结果：
 
 ```
 npx -y skills add leo485610395-cmyk/huawo-skill -g --all

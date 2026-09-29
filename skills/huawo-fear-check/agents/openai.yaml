@@ -1,0 +1,4 @@
+interface:
+  display_name: "huawo-fear-check"
+  short_description: "从具体卡点分清信息缺口与行动顾虑，再选一个可尝试的下一步"
+  default_prompt: "请使用 $huawo-fear-check，先听我具体想做什么、卡在哪里，再帮我分清信息缺口和行动顾虑。"

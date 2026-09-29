@@ -1,4 +1,4 @@
 interface:
-  display_name: "private-to-public-check"
-  short_description: "保留个人判断，核对官方依据、规则范围、身份权限与隐私，输出可追溯改稿意见"
-  default_prompt: "请用 $private-to-public-check 检查这份私下材料转公开时的事实依据、适用条件和表达权限，先给逐项意见，未经授权不覆盖原稿。"
+  display_name: "huawo-private-to-public-check"
+  short_description: "检查拟公开材料的事实、隐私与表达边界，默认给意见不替你发布"
+  default_prompt: "请使用 $huawo-private-to-public-check，检查这份拟公开材料的事实、隐私与表达边界，先给意见，不自动发布。"
