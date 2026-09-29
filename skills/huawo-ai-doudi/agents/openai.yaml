@@ -1,4 +1,4 @@
 interface:
-  display_name: "化我｜AI兜底"
-  short_description: "用五步法带你完成第一次尝试，按需调用目标梳理、顾虑梳理和实作工具"
-  default_prompt: "使用 $huawo-ai-doudi，带我用AI完成一件想做却没敢开始的小事，一次问我一个问题。"
+  display_name: "huawo-ai-doudi"
+  short_description: "帮新人选一件小事，从真实材料到可检查初版，再按需使用对应工具"
+  default_prompt: "请使用 $huawo-ai-doudi，带我从一件小事开始；已有任务就接着做，缺信息时一次问一个问题。"

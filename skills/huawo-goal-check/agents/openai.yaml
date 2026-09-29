@@ -1,0 +1,4 @@
+interface:
+  display_name: "huawo-goal-check"
+  short_description: "从一件犹豫的事开始，想清楚具体用途，再选择一个小验证动作"
+  default_prompt: "请使用 $huawo-goal-check，帮我想清楚这件想学或想做的事拿来干什么，再选一个小验证动作。"
