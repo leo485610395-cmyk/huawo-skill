@@ -1,0 +1,4 @@
+interface:
+  display_name: "化我｜学习做题陪练"
+  short_description: "先整理学习资料和题库，用通俗直觉理解，再独立练习与新题复验"
+  default_prompt: "请使用 $huawo-study-coach，先了解我的学习情况并检查题库或课件，再带我学懂一个知识点、独立做出新题。"
