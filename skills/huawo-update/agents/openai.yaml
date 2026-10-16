@@ -1,0 +1,4 @@
+interface:
+  display_name: "化我｜更新公开 Skill 合集"
+  short_description: "从 Gitee 检查和更新化我合集，保留个人修改与资料，逐项核验文件及调用状态"
+  default_prompt: "用 $huawo-update 更新化我的公开 Skill 合集，保留个人修改，说明核验结果与未试用项。"
