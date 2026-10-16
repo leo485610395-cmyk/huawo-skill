@@ -1,0 +1,4 @@
+interface:
+  display_name: "huawo-skill-creator"
+  short_description: "沿用上下文判断反复问题和可复用做法，按缺口采访，生成可试用的 Skill"
+  default_prompt: "请使用 $huawo-skill-creator，沿用已有沟通与经验，判断要反复解决什么问题、哪些做法能复用，缺什么再采访，然后制作 Skill。"
