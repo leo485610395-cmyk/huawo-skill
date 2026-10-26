@@ -1,0 +1,4 @@
+interface:
+  display_name: "化我｜问题分流"
+  short_description: "分清先查信息还是先做实践，说明依据并衔接一个下一步"
+  default_prompt: "请使用 $huawo-question-check，结合已有情况判断这次需要信息解释，还是还需要实践证据；说明分类与理由，给一个下一步，不重复已说清的事。"
